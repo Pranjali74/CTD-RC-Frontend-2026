@@ -1,0 +1,53 @@
+.page-background {
+  position: relative;
+
+  width: 100%;
+  min-height: 100vh;
+
+  overflow-x: hidden;
+
+  background: #002d28;
+}
+
+
+/* =========================================
+   ACTUAL RC BACKGROUND
+========================================= */
+
+.page-background-image {
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
+  width: 100vw;
+  height: 100vh;
+
+  background-image: url("../assets/rc-background.png");
+
+  background-repeat: no-repeat;
+
+  background-position: center center;
+
+  background-size: cover;
+
+  z-index: 0;
+
+  pointer-events: none;
+}
+
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.page-content {
+  position: relative;
+
+  z-index: 5;
+
+  width: 100%;
+  min-height: 100vh;
+
+  box-sizing: border-box;
+}

@@ -1,0 +1,759 @@
+/* =========================================
+   CODE EDITOR PAGE
+========================================= */
+
+.code-page {
+  width: 100%;
+  height: 100vh;
+  min-height: 100vh;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   MAIN
+========================================= */
+
+.code-main {
+  width: min(1250px, calc(100% - 80px));
+
+  height: calc(100vh - 92px);
+
+  margin: 0 auto;
+
+  padding: 14px 0 18px;
+
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* =========================================
+   BACK TO QUESTIONS
+========================================= */
+
+.back-question {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  flex-shrink: 0;
+
+  margin: 0 0 12px;
+
+  padding: 0;
+
+  border: none;
+
+  background: transparent;
+
+  color: #78e4b5;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: color 0.2s ease;
+}
+
+.back-question:hover {
+  color: #a0ffd1;
+}
+
+
+/* =========================================
+   MAIN TWO COLUMN LAYOUT
+========================================= */
+
+.editor-layout {
+  width: 100%;
+
+  flex: 1;
+
+  min-height: 0;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 0.92fr)
+    minmax(0, 1.08fr);
+
+  gap: 20px;
+
+  align-items: stretch;
+}
+
+
+/* =========================================
+   COMMON PANELS
+========================================= */
+
+.problem-panel,
+.editor-panel {
+  min-width: 0;
+  min-height: 0;
+
+  height: 100%;
+
+  box-sizing: border-box;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(4, 43, 35, 0.94),
+      rgba(2, 27, 23, 0.96)
+    );
+
+  border: 1px solid rgba(75, 196, 148, 0.32);
+
+  border-radius: 13px;
+
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.2);
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   LEFT PROBLEM PANEL
+========================================= */
+
+.problem-panel {
+  padding: 22px;
+
+  display: flex;
+
+  flex-direction: column;
+}
+
+
+/* =========================================
+   PROBLEM TITLE
+========================================= */
+
+.problem-title-row {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  flex-shrink: 0;
+
+  margin-bottom: 18px;
+}
+
+.problem-title-row h1 {
+  margin: 0;
+
+  color: #f2fff9;
+
+  font-size: 27px;
+
+  line-height: 1.15;
+
+  font-weight: 800;
+
+  letter-spacing: -0.4px;
+}
+
+
+/* POINTS */
+
+.points-badge {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 7px 13px;
+
+  border-radius: 18px;
+
+  background: #58e9a9;
+
+  color: #03271f;
+
+  font-size: 12px;
+
+  line-height: 1;
+
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================
+   DESCRIPTION
+========================================= */
+
+.problem-description {
+  flex-shrink: 0;
+
+  color: #a8c5b9;
+
+  font-size: 14px;
+
+  line-height: 1.65;
+
+  margin-bottom: 12px;
+}
+
+.problem-description p {
+  margin: 0 0 13px;
+}
+
+
+/* =========================================
+   INPUT / OUTPUT BOX
+========================================= */
+
+.io-box {
+  width: 100%;
+
+  margin-top: 12px;
+
+  border: 1px solid rgba(57, 181, 135, 0.3);
+
+  border-radius: 9px;
+
+  overflow: hidden;
+
+  background:
+    rgba(2, 25, 21, 0.85);
+
+  flex-shrink: 0;
+}
+
+
+/* IO HEADER */
+
+.io-header {
+  min-height: 42px;
+
+  padding: 0 13px;
+
+  box-sizing: border-box;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  background:
+    rgba(7, 70, 54, 0.7);
+
+  color: #65efae;
+
+  font-size: 13px;
+
+  font-weight: 800;
+}
+
+
+/* IO CONTENT */
+
+.io-content {
+  min-height: 56px;
+
+  padding: 13px;
+
+  box-sizing: border-box;
+
+  color: #71998d;
+
+  font-size: 12px;
+
+  line-height: 1.5;
+}
+
+
+/* RUN INPUT */
+
+.run-input-button {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  border: none;
+
+  border-radius: 7px;
+
+  padding: 7px 13px;
+
+  background: #61edaf;
+
+  color: #03271f;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.run-input-button:hover {
+  background: #86fac7;
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================
+   RIGHT EDITOR PANEL
+========================================= */
+
+.editor-panel {
+  padding: 13px;
+
+  display: flex;
+
+  flex-direction: column;
+}
+
+
+/* =========================================
+   LANGUAGE TABS
+========================================= */
+
+.language-tabs {
+  height: 44px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: stretch;
+
+  gap: 4px;
+
+  border-bottom: 1px solid rgba(68, 177, 136, 0.22);
+}
+
+
+.language-tab {
+  position: relative;
+
+  border: none;
+
+  background: transparent;
+
+  padding: 0 25px;
+
+  color: #769b8e;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: color 0.2s ease;
+}
+
+.language-tab:hover {
+  color: #d1f9e6;
+}
+
+.language-tab.active {
+  color: #64efad;
+}
+
+
+/* ACTIVE TAB */
+
+.language-tab.active::after {
+  content: "";
+
+  position: absolute;
+
+  left: 8px;
+  right: 8px;
+
+  bottom: -1px;
+
+  height: 2px;
+
+  background: #62efad;
+
+  box-shadow:
+    0 0 8px rgba(98, 239, 173, 0.55);
+}
+
+
+/* =========================================
+   CODE EDITOR
+========================================= */
+
+.editor-container {
+  flex: 1;
+
+  min-height: 0;
+
+  margin-top: 10px;
+
+  display: flex;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(61, 151, 119, 0.3);
+
+  border-radius: 8px;
+
+  background: #021512;
+}
+
+
+/* =========================================
+   LINE NUMBERS
+========================================= */
+
+.line-numbers {
+  width: 48px;
+
+  flex-shrink: 0;
+
+  padding-top: 15px;
+
+  box-sizing: border-box;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  background:
+    rgba(2, 25, 21, 0.9);
+
+  color: #4d7165;
+
+  font-family:
+    "Consolas",
+    "Courier New",
+    monospace;
+
+  font-size: 13px;
+
+  line-height: 25px;
+
+  user-select: none;
+}
+
+
+/* =========================================
+   CODE TEXTAREA
+========================================= */
+
+.code-textarea {
+  flex: 1;
+
+  width: 100%;
+
+  min-width: 0;
+
+  height: 100%;
+
+  padding: 15px;
+
+  box-sizing: border-box;
+
+  resize: none;
+
+  outline: none;
+
+  border: none;
+
+  background: transparent;
+
+  color: #d9fff0;
+
+  caret-color: #62efad;
+
+  font-family:
+    "Consolas",
+    "Courier New",
+    monospace;
+
+  font-size: 14px;
+
+  line-height: 25px;
+
+  overflow-y: auto;
+
+  overflow-x: auto;
+}
+
+.code-textarea::placeholder {
+  color: #42675b;
+
+  opacity: 1;
+}
+
+
+/* =========================================
+   TEST STATUS
+========================================= */
+
+.test-status {
+  min-height: 44px;
+
+  flex-shrink: 0;
+
+  margin-top: 9px;
+
+  padding: 0 13px;
+
+  box-sizing: border-box;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  border: 1px solid rgba(65, 167, 128, 0.25);
+
+  border-radius: 8px;
+
+  background:
+    rgba(3, 31, 25, 0.8);
+
+  color: #64efad;
+
+  font-size: 12px;
+
+  font-weight: 600;
+}
+
+
+/* =========================================
+   ACTION BUTTONS
+========================================= */
+
+.editor-actions {
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  margin-top: 9px;
+}
+
+
+.run-code-button,
+.submit-code-button {
+  height: 38px;
+
+  padding: 0 22px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  border-radius: 20px;
+
+  font-size: 12px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+/* RUN */
+
+.run-code-button {
+  border: 1px solid rgba(79, 207, 157, 0.55);
+
+  background: transparent;
+
+  color: #62efad;
+}
+
+.run-code-button:hover {
+  background: rgba(63, 201, 153, 0.13);
+}
+
+
+/* SUBMIT */
+
+.submit-code-button {
+  border: none;
+
+  background: #61edaf;
+
+  color: #03271f;
+}
+
+.submit-code-button:hover {
+  background: #86fac7;
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================
+   FULL VIEWPORT
+========================================= */
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+
+  margin: 0;
+}
+
+.code-page {
+  width: 100%;
+  height: 100vh;
+
+  min-height: 100vh;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1000px) {
+
+  .code-main {
+    width: calc(100% - 50px);
+  }
+
+  .editor-layout {
+    gap: 14px;
+  }
+
+  .problem-title-row h1 {
+    font-size: 24px;
+  }
+
+  .problem-description {
+    font-size: 13px;
+  }
+
+  .language-tab {
+    padding: 0 18px;
+  }
+}
+
+
+@media (max-width: 800px) {
+
+  .code-page {
+    overflow-y: auto;
+  }
+
+  .code-main {
+    height: auto;
+
+    min-height: calc(100vh - 92px);
+  }
+
+  .editor-layout {
+    grid-template-columns: 1fr;
+
+    flex: none;
+  }
+
+  .problem-panel {
+    min-height: 400px;
+  }
+
+  .editor-panel {
+    min-height: 550px;
+  }
+
+  .editor-container {
+    min-height: 380px;
+  }
+}
+
+
+@media (max-width: 600px) {
+
+  .code-main {
+    width: calc(100% - 28px);
+
+    padding-top: 12px;
+  }
+
+  .problem-panel,
+  .editor-panel {
+    padding: 15px;
+  }
+
+  .problem-title-row h1 {
+    font-size: 21px;
+  }
+
+  .problem-description {
+    font-size: 12px;
+
+    line-height: 1.55;
+  }
+
+  .points-badge {
+    font-size: 10px;
+
+    padding: 6px 10px;
+  }
+
+  .language-tab {
+    padding: 0 14px;
+
+    font-size: 11px;
+  }
+
+  .code-textarea {
+    font-size: 12px;
+  }
+
+  .line-numbers {
+    font-size: 12px;
+  }
+
+  .editor-actions {
+    justify-content: stretch;
+  }
+
+  .run-code-button,
+  .submit-code-button {
+    flex: 1;
+
+    padding: 0 14px;
+  }
+}
