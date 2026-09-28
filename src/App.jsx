@@ -1,53 +1,28 @@
+import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-
 import Login from "./Pages/Login";
 import Instructions from "./Pages/Instructions";
 import QuestionHub from "./Pages/QuestionHub";
-import CodeEditor from "./Pages/CodeEditor";
-import Submissions from "./Pages/Submissions";
 import Leaderboard from "./Pages/Leaderboard";
-import Results from "./Pages/Results";
-import FullScreenMonitor from "./Pages/FullScreenMonitor";
+import "./App.css";
 
-import ProtectedRoutes from "./ProtectedRoutes/ProtectedRoutes";
-import PublicRoutes from "./ProtectedRoutes/PublicRoutes";
+function Placeholder() {
+  return <Navigate to="/question-hub" replace />;
+}
 
-function App() {
+export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-
-        {/* Public Routes */}
-        <Route element={<PublicRoutes />}>
-          <Route path="/login" element={<Login />} />
-        </Route>
-
-        {/* Protected Routes */}
-        <Route element={<ProtectedRoutes />}>
-          <Route path="/instructions" element={<Instructions />} />
-          <Route path="/question-hub" element={<QuestionHub />} />
-          <Route path="/code-editor" element={<CodeEditor />} />
-          <Route path="/submissions" element={<Submissions />} />
-          <Route path="/leaderboard" element={<Leaderboard />} />
-          <Route path="/results" element={<Results />} />
-          <Route path="/monitor" element={<FullScreenMonitor />} />
-        </Route>
-
-        {/* Default */}
-        <Route
-          path="/"
-          element={<Navigate to="/login" replace />}
-        />
-
-        {/* Unknown route */}
-        <Route
-          path="*"
-          element={<Navigate to="/login" replace />}
-        />
-
+        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/instructions" element={<Instructions />} />
+        <Route path="/question-hub" element={<QuestionHub />} />
+        <Route path="/leaderboard" element={<Leaderboard />} />
+        <Route path="/results" element={<Placeholder />} />
+        <Route path="/question/:id" element={<Placeholder />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
 }
-
-export default App;
