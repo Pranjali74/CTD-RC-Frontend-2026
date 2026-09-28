@@ -28,7 +28,7 @@ function Results() {
   };
 
   return (
-    <PageBackground className="results-page">
+    <PageBackground className ="results-page">
       
       {/* ================= NAVBAR ================= */}
       <Navbar />
