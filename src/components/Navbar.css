@@ -1,0 +1,257 @@
+/* =========================================================
+   MAIN NAVBAR
+========================================================= */
+
+.main-navbar {
+  position: relative;
+  z-index: 20;
+
+  width: calc(100% - 160px);
+  height: 70px;
+
+  margin: 28px auto 0;
+
+  padding: 0 28px;
+
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+
+  background: rgba(1, 39, 33, 0.88);
+
+  border: 1px solid rgba(55, 213, 161, 0.38);
+
+  border-radius: 38px;
+
+  backdrop-filter: blur(10px);
+
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.10);
+
+}
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.navbar-logo {
+  width: 100px;
+
+  display: flex;
+  align-items: center;
+
+  cursor: pointer;
+
+  flex-shrink: 0;
+}
+
+
+.navbar-logo img {
+  display: block;
+
+  width: auto;
+  height: 38px;
+
+  max-width: 85px;
+
+  object-fit: contain;
+}
+
+
+/* =========================================================
+   NAVIGATION LINKS
+========================================================= */
+
+.navbar-links {
+  position: absolute;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+
+  gap: 42px;
+}
+
+
+.navbar-link {
+  position: relative;
+
+  color: #a4bdb5;
+
+  text-decoration: none;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+.navbar-link:hover {
+  color: #67efb2;
+}
+
+
+.navbar-link.active {
+  color: #67efb2;
+}
+
+
+/* Active underline */
+
+.navbar-link.active::after {
+  content: "";
+
+  position: absolute;
+
+  left: 50%;
+  bottom: -17px;
+
+  width: 25px;
+  height: 3px;
+
+  transform: translateX(-50%);
+
+  background: #67efb2;
+
+  border-radius: 4px;
+
+  box-shadow:
+    0 0 8px rgba(103, 239, 178, 0.5);
+}
+
+
+/* =========================================================
+   LOGOUT BUTTON
+========================================================= */
+
+.navbar-logout {
+  margin-left: auto;
+
+  width: 112px;
+  height: 42px;
+
+  border: none;
+
+  border-radius: 24px;
+
+  background: #65eeb0;
+
+  color: #022f28;
+
+  font-size: 13px;
+
+  font-weight: 900;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+
+.navbar-logout:hover {
+  background: #7af5bd;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 5px 18px rgba(72, 230, 169, 0.25);
+}
+
+
+.navbar-logout:active {
+  transform: translateY(0);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1000px) {
+
+  .main-navbar {
+    width: calc(100% - 80px);
+  }
+
+  .navbar-links {
+    gap: 25px;
+  }
+
+  .navbar-link {
+    font-size: 12px;
+  }
+}
+
+
+@media (max-width: 760px) {
+
+  .main-navbar {
+    width: calc(100% - 32px);
+
+    height: 64px;
+
+    padding: 0 20px;
+  }
+
+  .navbar-logo {
+    width: 70px;
+  }
+
+  .navbar-logo img {
+    height: 32px;
+    max-width: 65px;
+  }
+
+  .navbar-links {
+    gap: 15px;
+  }
+
+  .navbar-link {
+    font-size: 10px;
+  }
+
+  .navbar-link.active::after {
+    bottom: -14px;
+  }
+
+  .navbar-logout {
+    width: 82px;
+    height: 36px;
+
+    font-size: 10px;
+  }
+}
+
+
+@media (max-width: 600px) {
+
+  .main-navbar {
+    width: calc(100% - 20px);
+
+    margin-top: 12px;
+  }
+
+  .navbar-links {
+    display: none;
+  }
+
+  .navbar-logo {
+    width: auto;
+  }
+}
