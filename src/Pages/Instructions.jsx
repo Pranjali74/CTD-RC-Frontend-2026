@@ -1,5 +1,5 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
+import { logout } from "../auth/auth";
 import "../App.css";
 
 const instructions = [
@@ -12,6 +12,11 @@ const instructions = [
 
 export default function Instructions() {
   const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login");
+  };
 
   return (
     <main className="event-page">
@@ -27,7 +32,7 @@ export default function Instructions() {
           <button className="nav-link" onClick={() => navigate("/leaderboard")}>LEADERBOARDS</button>
           <button className="nav-link" onClick={() => navigate("/results")}>RESULTS</button>
         </nav>
-        <button className="logout-btn" onClick={() => navigate("/")}>LOGOUT</button>
+        <button className="logout-btn" onClick={handleLogout}>LOGOUT</button>
       </header>
 
       <section className="content instructions-content">

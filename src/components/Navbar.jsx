@@ -8,8 +8,8 @@ import rcLogo from "../assets/rc-logo.png";
 function Navbar() {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate("/login");
   };
 

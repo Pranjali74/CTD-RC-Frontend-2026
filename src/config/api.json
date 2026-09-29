@@ -1,0 +1,21 @@
+{
+    "BASE_URL": "/api",
+    "AUTH": {
+        "LOGIN": "/user/login",
+        "LOGOUT": "/user/logout"
+    },
+    "QUESTIONS": {
+        "GET_ALL": "/questions",
+        "GET_BY_ID": "/questions/:id",
+        "SUBMIT": "/questions/:id/submit"
+    },
+    "RESULTS": {
+        "GET_ALL": "/result"
+    },
+    "LEADERBOARD": {
+        "GET_LEADERBOARD": "/leaderboard"
+    },
+    "ACCURACY": {
+        "GET_ACCURACY": "/problems/accuracy"
+    }
+}

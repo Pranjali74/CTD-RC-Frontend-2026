@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Trophy,
@@ -9,18 +10,37 @@ import {
 
 import Navbar from "../components/Navbar";
 import PageBackground from "../components/PageBackground";
+import api from "../api/axios";
 
 import "./Results.css";
 
 function Results() {
   const navigate = useNavigate();
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState("");
 
-  // Temporary data - backend can replace this later
+  useEffect(() => {
+    let active = true;
+
+    api.get("/result/")
+      .then((response) => {
+        if (active) setResult(response.data);
+      })
+      .catch(() => {
+        if (active) setError("Unable to load your results.");
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const accuracy = Number(result?.accuracy) || 0;
   const resultData = {
-    rank: 1,
-    score: 100,
-    totalSubmissions: 5,
-    accuracy: 80,
+    rank: result?.rank ?? "-",
+    score: result?.total_score ?? "-",
+    totalSubmissions: result?.total_submissions ?? result?.totalSubmissions ?? "-",
+    accuracy,
   };
 
   const handleLeaderboard = () => {
@@ -50,6 +70,7 @@ function Results() {
             <p>
               Here's how you performed in the event
             </p>
+            {error && <p role="alert">{error}</p>}
           </div>
 
         </div>

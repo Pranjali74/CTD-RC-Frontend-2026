@@ -1,14 +1,10 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import api from "../api/axios";
+import { logout } from "../auth/auth";
+import Timer from "../components/Timer";
 import rcLogo from "../assets/rc-logo.png";
 import "../App.css";
-
-const questions = [
-  { id: "Q1", progress: 25, solved: false },
-  { id: "Q2", progress: 50, solved: false },
-  { id: "Q3", progress: 75, solved: false },
-  { id: "Q4", progress: 100, solved: true },
-];
 
 const navItems = [
   { label: "INSTRUCTIONS", path: "/instructions" },
@@ -64,9 +60,33 @@ function ProgressCircle({ label, progress, solved }) {
 export default function QuestionHub() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [questions, setQuestions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
+  useEffect(() => {
+    let active = true;
+
+    api.get("/problems/accuracy")
+      .then((response) => {
+        if (active) {
+          setQuestions(Array.isArray(response.data) ? response.data : []);
+        }
+      })
+      .catch(() => {
+        if (active) setError("Unable to load questions. Please try again.");
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    await logout();
     navigate("/login");
   };
 
@@ -126,30 +146,44 @@ export default function QuestionHub() {
           </div>
         </div>
 
+        <div className="qh-event-timer">
+          <Timer />
+        </div>
+
         {/* Question Cards */}
         <div className="question-grid">
-          {questions.map((item) => (
+          {questions.map((item, index) => {
+            const progress = Math.min(100, Math.max(0, Number.parseFloat(item.accuracy) || 0));
+            const solved = Boolean(localStorage.getItem(`solved_${item.problem_id}`));
+
+            return (
             <article
               className="question-card"
-              key={item.id}
+              key={item.problem_id}
             >
               <ProgressCircle
-               label={item.id}
-              progress={item.progress}
-             solved={item.solved}
+                label={`Q${index + 1}`}
+                progress={progress}
+                solved={solved}
               />
 
               <button
                 type="button"
                 className="solve-btn"
-                onClick={() =>
-                  console.log(`Solve ${item.id}`)
-                }
+                onClick={() => navigate(`/question/${item.problem_id}`, {
+                  state: { questionId: item.problem_id, problem_id: item.problem_id },
+                })}
               >
                 Solve
               </button>
             </article>
-          ))}
+            );
+          })}
+          {loading && <p className="question-hub-message">Loading questions...</p>}
+          {error && <p className="question-hub-message" role="alert">{error}</p>}
+          {!loading && !error && questions.length === 0 && (
+            <p className="question-hub-message">No questions are available.</p>
+          )}
         </div>
       </section>
     </main>

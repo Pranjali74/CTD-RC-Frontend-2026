@@ -36,6 +36,23 @@ button {
   cursor: pointer;
 }
 
+.event-timer {
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(0, 27, 25, 0.82);
+  color: var(--green-soft);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.qh-event-timer {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 0 18px;
+}
+
 /* =========================================================
    LOGIN
 ========================================================= */
@@ -285,7 +302,8 @@ button {
 
 /* INPUT */
 
-.input-wrap input {
+.input-wrap input,
+.input-wrap select {
   min-width: 0;
 
   flex: 1;
@@ -302,6 +320,21 @@ button {
   color: #0b332d;
 
   font-size: 13px;
+}
+
+.input-wrap select {
+  cursor: pointer;
+}
+
+.input-wrap select option {
+  color: #0b332d;
+}
+
+.login-error {
+  margin: -8px 0 16px;
+  color: #a32323;
+  font-size: 13px;
+  line-height: 1.4;
 }
 
 
