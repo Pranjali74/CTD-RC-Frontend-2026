@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../App.css";
-
+import Navbar from "../components/Navbar";
 
 
 export default function Leaderboard() {
@@ -9,16 +9,7 @@ export default function Leaderboard() {
 
   return (
     <main className="event-page">
-      <header className="topbar">
-        <div className="brand">RC</div>
-        <nav>
-          <button className="nav-link" onClick={() => navigate("/instructions")}>INSTRUCTIONS</button>
-          <button className="nav-link" onClick={() => navigate("/question-hub")}>QUESTION HUB</button>
-          <button className="nav-link active">LEADERBOARDS</button>
-          <button className="nav-link" onClick={() => navigate("/results")}>RESULTS</button>
-        </nav>
-        <button className="logout-btn" onClick={() => navigate("/")}>LOGOUT</button>
-      </header>
+      <Navbar />
 
       <section className="content leaderboard-content">
         <div className="hub-heading leaderboard-heading">

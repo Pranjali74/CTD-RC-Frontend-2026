@@ -1,489 +1,531 @@
-/* =========================================
+/* =========================================================
    CODE EDITOR PAGE
-========================================= */
+   RC 2026 - Green / Mint Glassmorphic Theme
+========================================================= */
 
 .code-page {
-  width: 100%;
-  height: 100vh;
   min-height: 100vh;
-
-  overflow: hidden;
+  width: 100%;
+  color: #effff8;
+  overflow-x: hidden;
 }
 
 
-/* =========================================
-   MAIN
-========================================= */
+/* =========================================================
+   MAIN CONTAINER
+========================================================= */
 
 .code-main {
-  width: min(1250px, calc(100% - 80px));
-
-  height: calc(100vh - 92px);
-
+  width: 96%;
+  max-width: 1500px;
   margin: 0 auto;
 
-  padding: 14px 0 18px;
+  padding: 8px 0 30px;
 
   box-sizing: border-box;
-
-  display: flex;
-  flex-direction: column;
 }
 
 
-/* =========================================
+/* =========================================================
    BACK TO QUESTIONS
-========================================= */
+========================================================= */
 
 .back-question {
   display: flex;
-
   align-items: center;
+  gap: 7px;
 
-  gap: 8px;
+  margin-bottom: 8px;
+  padding: 6px 12px;
 
-  flex-shrink: 0;
+  border: 1px solid rgba(90, 232, 174, 0.45);
+  border-radius: 6px;
 
-  margin: 0 0 12px;
+  background: rgba(4, 38, 32, 0.82);
 
-  padding: 0;
+  color: #7ff0c2;
 
-  border: none;
-
-  background: transparent;
-
-  color: #78e4b5;
-
-  font-size: 14px;
-
+  font-size: 10px;
   font-weight: 600;
 
   cursor: pointer;
 
-  transition: color 0.2s ease;
+  backdrop-filter: blur(10px);
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .back-question:hover {
-  color: #a0ffd1;
+  background: rgba(69, 220, 164, 0.12);
+  border-color: rgba(90, 232, 174, 0.8);
+  transform: translateX(-2px);
 }
 
 
-/* =========================================
+/* =========================================================
+   TOP EDITOR BAR
+========================================================= */
+
+.editor-topbar {
+  width: 100%;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 8px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(4, 39, 33, 0.94),
+      rgba(5, 47, 39, 0.82)
+    );
+
+  border: 1px solid rgba(78, 221, 166, 0.35);
+  border-radius: 7px;
+
+  box-shadow:
+    0 0 20px rgba(40, 220, 157, 0.05),
+    inset 0 1px 0 rgba(160, 255, 220, 0.04);
+
+  backdrop-filter: blur(14px);
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   TABS
+========================================================= */
+
+.editor-tabs {
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+
+  gap: 4px;
+}
+
+.editor-tab {
+  height: 28px;
+
+  padding: 0 12px;
+
+  border: none;
+  border-radius: 5px;
+
+  background: transparent;
+
+  color: #a9cfc0;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.editor-tab:hover {
+  color: #dffff1;
+  background: rgba(80, 230, 177, 0.08);
+}
+
+.editor-tab.active {
+  background: #55e2ad;
+
+  color: #03261e;
+
+  box-shadow:
+    0 0 12px rgba(85, 226, 173, 0.25);
+}
+
+
+/* =========================================================
+   LANGUAGE SELECTOR
+========================================================= */
+
+.language-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.language-selector {
+  height: 34px;
+  min-width: 115px;
+
+  appearance: none;
+
+  padding: 0 34px 0 14px;
+
+  border: 1px solid rgba(85, 226, 173, 0.65);
+  border-radius: 6px;
+
+  background: #55e2ad;
+  color: #03251d;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  cursor: pointer;
+  outline: none;
+}
+
+.language-selector option {
+  background: #06372e;
+  color: #effff8;
+}
+
+.language-chevron {
+  position: absolute;
+  right: 10px;
+  pointer-events: none;
+
+  color: #03251d;
+}
+
+
+/* =========================================================
    MAIN TWO COLUMN LAYOUT
-========================================= */
+========================================================= */
 
 .editor-layout {
-  width: 100%;
-
-  flex: 1;
-
-  min-height: 0;
-
   display: grid;
 
   grid-template-columns:
-    minmax(0, 0.92fr)
-    minmax(0, 1.08fr);
+    minmax(470px, 1fr)
+    minmax(500px, 1fr);
 
-  gap: 20px;
+  gap: 8px;
+
+  margin-top: 8px;
 
   align-items: stretch;
 }
 
 
-/* =========================================
-   COMMON PANELS
-========================================= */
+/* =========================================================
+   LEFT PROBLEM PANEL
+========================================================= */
 
-.problem-panel,
-.editor-panel {
+.problem-panel {
   min-width: 0;
-  min-height: 0;
 
-  height: 100%;
-
-  box-sizing: border-box;
+  padding: 10px;
 
   background:
     linear-gradient(
       145deg,
-      rgba(4, 43, 35, 0.94),
-      rgba(2, 27, 23, 0.96)
+      rgba(3, 35, 30, 0.93),
+      rgba(4, 29, 26, 0.88)
     );
 
-  border: 1px solid rgba(75, 196, 148, 0.32);
-
-  border-radius: 13px;
+  border: 1px solid rgba(82, 219, 169, 0.38);
+  border-radius: 7px;
 
   box-shadow:
-    0 8px 30px rgba(0, 0, 0, 0.2);
+    0 0 25px rgba(26, 207, 148, 0.04),
+    inset 0 1px 0 rgba(170, 255, 225, 0.035);
+
+  backdrop-filter: blur(14px);
+
+  box-sizing: border-box;
 
   overflow: hidden;
 }
 
 
-/* =========================================
-   LEFT PROBLEM PANEL
-========================================= */
+/* =========================================================
+   QUESTION HEADER
+========================================================= */
 
-.problem-panel {
-  padding: 22px;
-
-  display: flex;
-
-  flex-direction: column;
+.problem-header {
+  margin-bottom: 9px;
 }
 
-
-/* =========================================
-   PROBLEM TITLE
-========================================= */
-
-.problem-title-row {
-  display: flex;
-
-  align-items: center;
-
-  gap: 12px;
-
-  flex-shrink: 0;
-
-  margin-bottom: 18px;
-}
-
-.problem-title-row h1 {
+.problem-header h1 {
   margin: 0;
 
-  color: #f2fff9;
+  color: #a5f5d1;
 
-  font-size: 27px;
-
+  font-size: 25px;
   line-height: 1.15;
 
   font-weight: 800;
 
-  letter-spacing: -0.4px;
+  letter-spacing: 0.2px;
 }
 
+.problem-points {
+  margin: 5px 0 0;
 
-/* POINTS */
-
-.points-badge {
-  display: inline-flex;
-
-  align-items: center;
-  justify-content: center;
-
-  padding: 7px 13px;
-
-  border-radius: 18px;
-
-  background: #58e9a9;
-
-  color: #03271f;
-
-  font-size: 12px;
-
-  line-height: 1;
-
-  font-weight: 800;
-
-  white-space: nowrap;
-}
-
-
-/* =========================================
-   DESCRIPTION
-========================================= */
-
-.problem-description {
-  flex-shrink: 0;
-
-  color: #a8c5b9;
+  color: #65e6b0;
 
   font-size: 14px;
-
-  line-height: 1.65;
-
-  margin-bottom: 12px;
-}
-
-.problem-description p {
-  margin: 0 0 13px;
+  font-weight: 700;
 }
 
 
-/* =========================================
-   INPUT / OUTPUT BOX
-========================================= */
+/* =========================================================
+   PROBLEM SECTIONS
+========================================================= */
 
-.io-box {
-  width: 100%;
+.problem-section {
+  margin-bottom: 8px;
 
-  margin-top: 12px;
+  padding: 9px;
 
-  border: 1px solid rgba(57, 181, 135, 0.3);
-
-  border-radius: 9px;
-
-  overflow: hidden;
+  border: 1px solid rgba(82, 219, 169, 0.30);
+  border-radius: 5px;
 
   background:
-    rgba(2, 25, 21, 0.85);
+    rgba(5, 31, 28, 0.72);
 
-  flex-shrink: 0;
+  box-shadow:
+    inset 0 1px 0 rgba(170, 255, 225, 0.025);
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
 }
 
+.problem-section:hover {
+  border-color: rgba(82, 219, 169, 0.48);
+  background: rgba(7, 39, 34, 0.78);
+}
 
-/* IO HEADER */
+.problem-section h3 {
+  margin: 0 0 6px;
 
-.io-header {
-  min-height: 42px;
-
-  padding: 0 13px;
-
-  box-sizing: border-box;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
-
-  background:
-    rgba(7, 70, 54, 0.7);
-
-  color: #65efae;
+  color: #8ff1c8;
 
   font-size: 13px;
-
   font-weight: 800;
 }
 
+.problem-section p {
+  margin: 0;
 
-/* IO CONTENT */
+  color: #c8ded5;
 
-.io-content {
-  min-height: 56px;
+  font-size: 11px;
+  line-height: 1.65;
+}
 
-  padding: 13px;
 
-  box-sizing: border-box;
+/* =========================================================
+   TEST CASE PANEL
+========================================================= */
 
-  color: #71998d;
+.test-case-panel {
+  margin-top: 8px;
+
+  padding: 9px;
+
+  border: 1px solid rgba(82, 219, 169, 0.34);
+  border-radius: 6px;
+
+  background:
+    rgba(3, 30, 27, 0.9);
+
+  box-shadow:
+    inset 0 1px 0 rgba(170, 255, 225, 0.025);
+}
+
+.test-case-title {
+  margin-bottom: 8px;
+
+  color: #8ff1c8;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.test-case-inputs {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 8px;
+}
+
+.test-case-field label {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #a9cfc0;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.test-case-box {
+  min-height: 50px;
+
+  padding: 8px;
+
+  border: 1px solid rgba(82, 219, 169, 0.30);
+  border-radius: 5px;
+
+  background:
+    rgba(7, 37, 33, 0.9);
+
+  color: #dcf8eb;
+
+  font-family: "Consolas", "Courier New", monospace;
 
   font-size: 12px;
 
-  line-height: 1.5;
+  box-sizing: border-box;
 }
 
+.machine-run-button {
+  width: 100%;
 
-/* RUN INPUT */
+  height: 28px;
 
-.run-input-button {
-  display: flex;
+  margin-top: 8px;
 
-  align-items: center;
-  justify-content: center;
+  border: 1px solid rgba(82, 219, 169, 0.22);
+  border-radius: 5px;
 
-  gap: 5px;
+  background:
+    rgba(59, 93, 84, 0.5);
 
-  border: none;
+  color: #8daaa0;
 
-  border-radius: 7px;
-
-  padding: 7px 13px;
-
-  background: #61edaf;
-
-  color: #03271f;
-
-  font-size: 11px;
-
-  font-weight: 800;
+  font-size: 9px;
+  font-weight: 700;
 
   cursor: pointer;
 
   transition: 0.2s ease;
 }
 
-.run-input-button:hover {
-  background: #86fac7;
+.machine-run-button:hover {
+  background: rgba(72, 218, 166, 0.12);
 
-  transform: translateY(-1px);
+  border-color: rgba(82, 219, 169, 0.5);
+
+  color: #8ff1c8;
 }
 
 
-/* =========================================
-   RIGHT EDITOR PANEL
-========================================= */
+/* =========================================================
+   RIGHT CODE EDITOR
+========================================================= */
 
 .editor-panel {
-  padding: 13px;
+  min-width: 0;
 
   display: flex;
-
   flex-direction: column;
-}
-
-
-/* =========================================
-   LANGUAGE TABS
-========================================= */
-
-.language-tabs {
-  height: 44px;
-
-  flex-shrink: 0;
-
-  display: flex;
-
-  align-items: stretch;
-
-  gap: 4px;
-
-  border-bottom: 1px solid rgba(68, 177, 136, 0.22);
-}
-
-
-.language-tab {
-  position: relative;
-
-  border: none;
-
-  background: transparent;
-
-  padding: 0 25px;
-
-  color: #769b8e;
-
-  font-size: 13px;
-
-  font-weight: 700;
-
-  cursor: pointer;
-
-  transition: color 0.2s ease;
-}
-
-.language-tab:hover {
-  color: #d1f9e6;
-}
-
-.language-tab.active {
-  color: #64efad;
-}
-
-
-/* ACTIVE TAB */
-
-.language-tab.active::after {
-  content: "";
-
-  position: absolute;
-
-  left: 8px;
-  right: 8px;
-
-  bottom: -1px;
-
-  height: 2px;
-
-  background: #62efad;
-
-  box-shadow:
-    0 0 8px rgba(98, 239, 173, 0.55);
-}
-
-
-/* =========================================
-   CODE EDITOR
-========================================= */
-
-.editor-container {
-  flex: 1;
-
-  min-height: 0;
-
-  margin-top: 10px;
-
-  display: flex;
-
-  overflow: hidden;
-
-  border: 1px solid rgba(61, 151, 119, 0.3);
-
-  border-radius: 8px;
-
-  background: #021512;
-}
-
-
-/* =========================================
-   LINE NUMBERS
-========================================= */
-
-.line-numbers {
-  width: 48px;
-
-  flex-shrink: 0;
-
-  padding-top: 15px;
-
-  box-sizing: border-box;
-
-  display: flex;
-
-  flex-direction: column;
-
-  align-items: center;
 
   background:
-    rgba(2, 25, 21, 0.9);
+    linear-gradient(
+      145deg,
+      rgba(3, 31, 28, 0.96),
+      rgba(3, 24, 23, 0.93)
+    );
 
-  color: #4d7165;
+  border: 1px solid rgba(82, 219, 169, 0.38);
+  border-radius: 7px;
 
-  font-family:
-    "Consolas",
-    "Courier New",
-    monospace;
+  box-shadow:
+    0 0 25px rgba(26, 207, 148, 0.045),
+    inset 0 1px 0 rgba(170, 255, 225, 0.035);
 
-  font-size: 13px;
+  backdrop-filter: blur(14px);
 
-  line-height: 25px;
-
-  user-select: none;
+  overflow: hidden;
 }
 
 
-/* =========================================
-   CODE TEXTAREA
-========================================= */
+/* =========================================================
+   CODE AREA
+========================================================= */
+
+.editor-container {
+  position: relative;
+
+  flex: 1;
+
+  min-height: 350px;
+
+  display: flex;
+
+  background:
+    rgba(2, 20, 19, 0.97);
+
+  border-bottom: 1px solid rgba(82, 219, 169, 0.30);
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   LINE NUMBERS
+========================================================= */
+
+.line-numbers {
+  width: 38px;
+
+  padding: 10px 7px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  background:
+    rgba(4, 29, 27, 0.96);
+
+  border-right: 1px solid rgba(82, 219, 169, 0.18);
+
+  color: #587c70;
+
+  font-family: "Consolas", "Courier New", monospace;
+
+  font-size: 12px;
+
+  line-height: 1.7;
+
+  user-select: none;
+
+  box-sizing: border-box;
+}
+
+.line-numbers span {
+  height: 14px;
+}
+
+
+/* =========================================================
+   TEXTAREA
+========================================================= */
 
 .code-textarea {
   flex: 1;
 
   width: 100%;
 
-  min-width: 0;
+  padding: 10px;
 
-  height: 100%;
-
-  padding: 15px;
-
-  box-sizing: border-box;
+  border: none;
+  outline: none;
 
   resize: none;
 
-  outline: none;
-
-  border: none;
-
   background: transparent;
 
-  color: #d9fff0;
-
-  caret-color: #62efad;
+  color: #dffbed;
 
   font-family:
     "Consolas",
@@ -492,213 +534,211 @@
 
   font-size: 14px;
 
-  line-height: 25px;
+  line-height: 1.7;
 
-  overflow-y: auto;
-
-  overflow-x: auto;
+  box-sizing: border-box;
 }
 
 .code-textarea::placeholder {
-  color: #42675b;
+  color: #56746b;
+}
 
-  opacity: 1;
+.code-textarea:focus {
+  outline: none;
 }
 
 
-/* =========================================
-   TEST STATUS
-========================================= */
+/* =========================================================
+   TEST RESULTS
+========================================================= */
 
-.test-status {
-  min-height: 44px;
-
-  flex-shrink: 0;
-
-  margin-top: 9px;
-
-  padding: 0 13px;
-
-  box-sizing: border-box;
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 8px;
-
-  border: 1px solid rgba(65, 167, 128, 0.25);
-
-  border-radius: 8px;
+.test-results-panel {
+  min-height: 92px;
 
   background:
-    rgba(3, 31, 25, 0.8);
+    rgba(3, 27, 25, 0.98);
 
-  color: #64efad;
+  border-bottom: 1px solid rgba(82, 219, 169, 0.30);
 
-  font-size: 12px;
+  overflow-y: auto;
+}
 
-  font-weight: 600;
+.test-result-header {
+  height: 30px;
+
+  padding: 0 9px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-bottom: 1px solid rgba(82, 219, 169, 0.20);
+
+  box-sizing: border-box;
+}
+
+.result-status {
+  display: flex;
+  align-items: center;
+
+  gap: 5px;
+
+  color: #a6c9bc;
+
+  font-size: 10px;
+}
+
+.result-status svg {
+  color: #ff706b;
+}
+
+.result-status strong {
+  color: #7cebb9;
+}
+
+.close-results {
+  border: none;
+
+  background: transparent;
+
+  color: #87a79b;
+
+  font-size: 10px;
+
+  cursor: pointer;
+}
+
+.close-results:hover {
+  color: #b8f5dc;
+}
+
+.test-case-results {
+  padding: 6px 8px;
+}
+
+.test-result {
+  height: 24px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 7px;
+
+  margin-bottom: 5px;
+
+  border: 1px solid rgba(82, 219, 169, 0.24);
+  border-radius: 4px;
+
+  background: rgba(7, 36, 32, 0.65);
+
+  color: #b8d5ca;
+
+  font-size: 8px;
+
+  box-sizing: border-box;
+}
+
+.test-result.failed {
+  color: #ff8179;
+
+  border-color: rgba(255, 112, 107, 0.4);
+
+  background: rgba(104, 42, 42, 0.13);
 }
 
 
-/* =========================================
+/* =========================================================
    ACTION BUTTONS
-========================================= */
+========================================================= */
 
 .editor-actions {
-  flex-shrink: 0;
+  height: 50px;
 
   display: flex;
-
   align-items: center;
-
   justify-content: flex-end;
-
-  gap: 10px;
-
-  margin-top: 9px;
-}
-
-
-.run-code-button,
-.submit-code-button {
-  height: 38px;
-
-  padding: 0 22px;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
 
   gap: 7px;
 
-  border-radius: 20px;
+  padding: 7px;
 
-  font-size: 12px;
+  background:
+    rgba(3, 28, 26, 0.98);
 
+  box-sizing: border-box;
+}
+
+.run-code-button,
+.submit-code-button {
+  height: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  padding: 0 16px;
+
+  border-radius: 5px;
+
+  font-size: 9px;
   font-weight: 800;
 
   cursor: pointer;
 
-  transition:
-    background 0.2s ease,
-    transform 0.2s ease;
+  transition: all 0.2s ease;
 }
 
-
-/* RUN */
-
-.run-code-button {
-  border: 1px solid rgba(79, 207, 157, 0.55);
-
-  background: transparent;
-
-  color: #62efad;
-}
-
-.run-code-button:hover {
-  background: rgba(63, 201, 153, 0.13);
-}
-
-
-/* SUBMIT */
-
+.run-code-button,
 .submit-code-button {
-  border: none;
+  border: 1px solid rgba(85, 226, 173, 0.65);
 
-  background: #61edaf;
+  background:
+    linear-gradient(
+      135deg,
+      #63e8b5,
+      #42c994
+    );
 
-  color: #03271f;
+  color: #03271e;
+
+  box-shadow:
+    0 0 12px rgba(70, 220, 165, 0.08);
 }
 
+.run-code-button:hover,
 .submit-code-button:hover {
-  background: #86fac7;
+  background:
+    linear-gradient(
+      135deg,
+      #82f2c6,
+      #55dca5
+    );
+
+  box-shadow:
+    0 0 16px rgba(70, 220, 165, 0.22);
 
   transform: translateY(-1px);
 }
 
 
-/* =========================================
-   FULL VIEWPORT
-========================================= */
-
-html,
-body,
-#root {
-  width: 100%;
-  height: 100%;
-
-  margin: 0;
-}
-
-.code-page {
-  width: 100%;
-  height: 100vh;
-
-  min-height: 100vh;
-
-  overflow: hidden;
-}
-
-
-/* =========================================
+/* =========================================================
    RESPONSIVE
-========================================= */
+========================================================= */
 
 @media (max-width: 1000px) {
 
-  .code-main {
-    width: calc(100% - 50px);
-  }
-
-  .editor-layout {
-    gap: 14px;
-  }
-
-  .problem-title-row h1 {
-    font-size: 24px;
-  }
-
-  .problem-description {
-    font-size: 13px;
-  }
-
-  .language-tab {
-    padding: 0 18px;
-  }
-}
-
-
-@media (max-width: 800px) {
-
-  .code-page {
-    overflow-y: auto;
-  }
-
-  .code-main {
-    height: auto;
-
-    min-height: calc(100vh - 92px);
-  }
-
   .editor-layout {
     grid-template-columns: 1fr;
-
-    flex: none;
   }
 
   .problem-panel {
-    min-height: 400px;
+    max-height: none;
   }
 
   .editor-panel {
-    min-height: 550px;
-  }
-
-  .editor-container {
-    min-height: 380px;
+    min-height: 500px;
   }
 }
 
@@ -706,54 +746,500 @@ body,
 @media (max-width: 600px) {
 
   .code-main {
-    width: calc(100% - 28px);
-
-    padding-top: 12px;
+    width: 94%;
   }
 
-  .problem-panel,
-  .editor-panel {
-    padding: 15px;
+  .editor-topbar {
+    height: auto;
+
+    min-height: 42px;
+
+    gap: 5px;
+
+    padding: 5px;
   }
 
-  .problem-title-row h1 {
-    font-size: 21px;
+  .editor-tabs {
+    overflow-x: auto;
   }
 
-  .problem-description {
-    font-size: 12px;
-
-    line-height: 1.55;
+  .editor-tab {
+    white-space: nowrap;
   }
 
-  .points-badge {
-    font-size: 10px;
-
-    padding: 6px 10px;
+  .language-selector {
+    flex-shrink: 0;
   }
 
-  .language-tab {
-    padding: 0 14px;
-
-    font-size: 11px;
+  .test-case-inputs {
+    grid-template-columns: 1fr;
   }
 
-  .code-textarea {
-    font-size: 12px;
+  .problem-header h1 {
+    font-size: 16px;
+  }
+}
+
+/* =========================================================
+   OUTPUT AREA
+========================================================= */
+
+.output-area {
+  padding: 8px 10px;
+}
+
+.output-heading {
+  margin-bottom: 6px;
+
+  color: #8ff1c8;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.output-area pre {
+  min-height: 35px;
+
+  margin: 0 0 7px;
+  padding: 8px;
+
+  border: 1px solid rgba(82, 219, 169, 0.28);
+  border-radius: 5px;
+
+  background: rgba(2, 20, 19, 0.8);
+
+  color: #dffbed;
+
+  font-family: "Consolas", "Courier New", monospace;
+  font-size: 12px;
+
+  white-space: pre-wrap;
+}
+
+.run-message {
+  margin-bottom: 7px;
+
+  color: #8daea2;
+
+  font-size: 10px;
+}
+
+.test-result {
+  min-height: 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 9px;
+  margin-bottom: 5px;
+
+  border: 1px solid rgba(82, 219, 169, 0.24);
+  border-radius: 4px;
+
+  background: rgba(7, 36, 32, 0.65);
+
+  color: #b8d5ca;
+
+  font-size: 10px;
+}
+
+.test-result.failed {
+  color: #ff8179;
+  border-color: rgba(255, 112, 107, 0.4);
+}
+
+.status-success {
+  color: #69e8b2 !important;
+}
+
+.status-error {
+  color: #ff8179 !important;
+}
+
+/* =========================================================
+   SAMPLE CASES
+========================================================= */
+
+.sample-cases-panel {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.sample-cases-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 14px;
+}
+
+.sample-cases-heading h3 {
+  margin: 0;
+
+  color: #a5f5d1;
+
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.sample-cases-heading span {
+  color: #86b9a8;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   INDIVIDUAL SAMPLE CASE
+========================================================= */
+
+.sample-case-card {
+  margin-bottom: 12px;
+  padding: 12px;
+
+  border: 1px solid rgba(82, 219, 169, 0.32);
+  border-radius: 7px;
+
+  background: rgba(5, 35, 31, 0.72);
+
+  box-sizing: border-box;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.sample-case-card:hover {
+  border-color: rgba(82, 219, 169, 0.55);
+
+  background: rgba(7, 42, 36, 0.8);
+}
+
+
+/* =========================================================
+   SAMPLE CASE TITLE
+========================================================= */
+
+.sample-case-title {
+  margin-bottom: 10px;
+
+  color: #8ff1c8;
+
+  font-size: 14px;
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   INPUT / OUTPUT
+========================================================= */
+
+.sample-case-grid {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 10px;
+}
+
+.sample-case-grid > div {
+  min-width: 0;
+}
+
+.sample-case-grid label {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #a9cfc0;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   INPUT / OUTPUT BOX
+========================================================= */
+
+.sample-case-grid pre {
+  min-height: 42px;
+
+  margin: 0;
+  padding: 9px;
+
+  display: flex;
+  align-items: center;
+
+  border: 1px solid rgba(82, 219, 169, 0.28);
+  border-radius: 5px;
+
+  background: rgba(2, 23, 21, 0.9);
+
+  color: #dffbed;
+
+  font-family:
+    "Consolas",
+    "Courier New",
+    monospace;
+
+  font-size: 12px;
+
+  line-height: 1.4;
+
+  white-space: pre-wrap;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   SAMPLE CASE RESPONSIVE
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .sample-case-grid {
+    grid-template-columns: 1fr;
   }
 
-  .line-numbers {
-    font-size: 12px;
+  .sample-cases-heading h3 {
+    font-size: 17px;
+  }
+}
+
+/* =========================================================
+   SUBMISSIONS TAB
+========================================================= */
+
+.submissions-panel {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.submissions-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 14px;
+}
+
+.submissions-heading h3 {
+  margin: 0;
+
+  color: #a5f5d1;
+
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.submissions-heading span {
+  color: #86b9a8;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   EMPTY SUBMISSIONS
+========================================================= */
+
+.empty-submissions {
+  padding: 28px 20px;
+
+  border: 1px solid rgba(82, 219, 169, 0.28);
+  border-radius: 7px;
+
+  background: rgba(5, 35, 31, 0.65);
+
+  text-align: center;
+}
+
+.empty-submissions p {
+  margin: 0 0 6px;
+
+  color: #b8f5dc;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.empty-submissions span {
+  color: #86a99d;
+
+  font-size: 11px;
+}
+
+
+/* =========================================================
+   SUBMISSION LIST
+========================================================= */
+
+.submission-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 9px;
+
+  width: 100%;
+}
+
+
+/* =========================================================
+   SUBMISSION CARD
+========================================================= */
+
+.submission-item {
+  min-height: 62px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 11px 14px;
+
+  border: 1px solid rgba(82, 219, 169, 0.30);
+  border-radius: 7px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(5, 38, 33, 0.82),
+      rgba(4, 29, 27, 0.72)
+    );
+
+  box-sizing: border-box;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.submission-item:hover {
+  border-color: rgba(82, 219, 169, 0.55);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(7, 48, 41, 0.9),
+      rgba(5, 35, 31, 0.82)
+    );
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   LEFT SIDE
+========================================================= */
+
+.submission-item > div:first-child {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+
+  min-width: 0;
+}
+
+.submission-item strong {
+  color: #a5f5d1;
+
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.submission-item > div:first-child span {
+  color: #86a99d;
+
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   RIGHT SIDE
+========================================================= */
+
+.submission-result {
+  display: flex;
+  align-items: center;
+
+  gap: 16px;
+
+  flex-shrink: 0;
+}
+
+.submission-result span {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+
+/* STATUS */
+
+.submission-result .pending {
+  padding: 5px 9px;
+
+  border: 1px solid rgba(255, 194, 92, 0.35);
+  border-radius: 5px;
+
+  background: rgba(255, 194, 92, 0.08);
+
+  color: #eacb82;
+}
+
+.submission-result .accepted {
+  padding: 5px 9px;
+
+  border: 1px solid rgba(82, 219, 169, 0.38);
+  border-radius: 5px;
+
+  background: rgba(82, 219, 169, 0.10);
+
+  color: #69e8b2;
+}
+
+
+/* SCORE */
+
+.submission-result > span:last-child {
+  min-width: 30px;
+
+  color: #c7e6da;
+
+  text-align: right;
+
+  font-family:
+    "Consolas",
+    "Courier New",
+    monospace;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .submission-item {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 10px;
   }
 
-  .editor-actions {
-    justify-content: stretch;
-  }
+  .submission-result {
+    width: 100%;
 
-  .run-code-button,
-  .submit-code-button {
-    flex: 1;
-
-    padding: 0 14px;
+    justify-content: space-between;
   }
 }

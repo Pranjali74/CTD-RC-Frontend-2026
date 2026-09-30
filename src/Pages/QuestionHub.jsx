@@ -2,6 +2,7 @@ import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import rcLogo from "../assets/rc-logo.png";
 import "../App.css";
+import Navbar from "../components/Navbar";
 
 const questions = [
   { id: "Q1", progress: 25, solved: false },
@@ -75,39 +76,7 @@ export default function QuestionHub() {
       {/* =========================
           TOP NAVIGATION
       ========================== */}
-      <header className="top-nav">
-        <Link to="/question-hub" className="nav-logo-link">
-          <img
-            src={rcLogo}
-            alt="RC"
-            className="nav-logo"
-          />
-        </Link>
-
-        <nav className="nav-links">
-          {navItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`nav-link ${
-                location.pathname === item.path
-                  ? "active"
-                  : ""
-              }`}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-
-        <button
-          type="button"
-          className="logout-btn"
-          onClick={handleLogout}
-        >
-          LOGOUT
-        </button>
-      </header>
+      <Navbar />
 
       {/* =========================
           PAGE CONTENT
@@ -143,7 +112,9 @@ export default function QuestionHub() {
                 type="button"
                 className="solve-btn"
                 onClick={() =>
-                  console.log(`Solve ${item.id}`)
+                  navigate("/code-editor", {
+                    state: { questionId: item.id },
+                  })
                 }
               >
                 Solve
