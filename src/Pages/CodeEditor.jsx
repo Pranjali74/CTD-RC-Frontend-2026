@@ -468,8 +468,19 @@ function CodeEditor() {
                   language === "Python"
                     ? 'print("Hello, World!")'
                     : language === "Java"
-                    ? 'System.out.println("Hello, World!");'
-                    : '#include <iostream>\nusing namespace std;'
+                    ?  `import java.util.*;                            
+                        public class Main {
+                            public static void main(String[] args) {
+                                System.out.println("Hello, World!");
+                            }
+                        }`
+                    : `#include <iostream>
+                      using namespace std;
+
+                      int main() {
+                        cout << "Hello, World!" << endl;
+                          return 0;
+                      }`
                 }
               />
 
