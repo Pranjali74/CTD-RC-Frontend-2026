@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Trophy,
@@ -9,31 +10,223 @@ import {
 
 import Navbar from "../components/Navbar";
 import PageBackground from "../components/PageBackground";
+import api from "../api/axios";
 
 import "./Results.css";
 
 function Results() {
   const navigate = useNavigate();
 
-  // Temporary data - backend can replace this later
-  const resultData = {
-    rank: 1,
-    score: 100,
-    totalSubmissions: 5,
-    accuracy: 80,
-  };
+  /* =========================================================
+     RESULT DATA
+  ========================================================= */
+
+  const [resultData, setResultData] = useState({
+    rank: 0,
+    score: 0,
+    totalSubmissions: 0,
+    accuracy: 0,
+    teamname: "",
+    isjunior: false,
+  });
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  /* =========================================================
+     FETCH RESULTS
+  ========================================================= */
+
+  useEffect(() => {
+    const fetchResults = async () => {
+      setLoading(true);
+      setError("");
+
+      try {
+        const response = await api.get("/result/");
+
+        /*
+         * Backend normally returns an array.
+         * If it returns a single object, handle that too.
+         */
+
+        const data = Array.isArray(response.data)
+          ? response.data
+          : response.data?.results ||
+            response.data?.data ||
+            [];
+
+        if (!Array.isArray(data) || data.length === 0) {
+          setResultData({
+            rank: 0,
+            score: 0,
+            totalSubmissions: 0,
+            accuracy: 0,
+            teamname: "",
+            isjunior: false,
+          });
+
+          return;
+        }
+
+        /*
+         * Find the current user's result.
+         *
+         * The backend result endpoint can return
+         * multiple team results, so use the stored
+         * currentUser/teamname when available.
+         */
+
+        let currentResult = data[0];
+
+        try {
+          const storedUser =
+            JSON.parse(
+              localStorage.getItem("currentUser")
+            );
+
+          if (storedUser?.teamname) {
+            const matchedResult = data.find(
+              (item) =>
+                String(item.teamname || "").toLowerCase() ===
+                String(storedUser.teamname).toLowerCase()
+            );
+
+            if (matchedResult) {
+              currentResult = matchedResult;
+            }
+          }
+        } catch (storageError) {
+          console.warn(
+            "Unable to read current user:",
+            storageError
+          );
+        }
+
+        setResultData({
+          rank:
+            Number(currentResult.rank) || 0,
+
+          score:
+            Number(currentResult.total_score) || 0,
+
+          totalSubmissions:
+            Number(
+              currentResult.total_submissions ??
+                currentResult.totalSubmissions
+            ) || 0,
+
+          accuracy:
+            Number(currentResult.accuracy) || 0,
+
+          teamname:
+            currentResult.teamname || "",
+
+          isjunior:
+            Boolean(currentResult.isjunior),
+        });
+      } catch (err) {
+        console.error(
+          "Error fetching results:",
+          err
+        );
+
+        if (err?.response?.status === 403) {
+          navigate("/login", {
+            replace: true,
+          });
+
+          return;
+        }
+
+        setError(
+          err?.response?.data?.message ||
+            "Unable to load your results."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchResults();
+  }, [navigate]);
+
+  /* =========================================================
+     LEADERBOARD
+  ========================================================= */
 
   const handleLeaderboard = () => {
     navigate("/leaderboard");
   };
 
+  /* =========================================================
+     LOADING
+  ========================================================= */
+
+  if (loading) {
+    return (
+      <PageBackground className="results-page">
+        <Navbar />
+
+        <main className="results-container">
+          <div
+            style={{
+              padding: "60px 20px",
+              textAlign: "center",
+            }}
+          >
+            Loading results...
+          </div>
+        </main>
+      </PageBackground>
+    );
+  }
+
+  /* =========================================================
+     ERROR
+  ========================================================= */
+
+  if (error) {
+    return (
+      <PageBackground className="results-page">
+        <Navbar />
+
+        <main className="results-container">
+          <div
+            style={{
+              padding: "60px 20px",
+              textAlign: "center",
+            }}
+          >
+            <p>{error}</p>
+
+            <button
+              className="leaderboard-btn"
+              onClick={() =>
+                window.location.reload()
+              }
+            >
+              Try Again
+            </button>
+          </div>
+        </main>
+      </PageBackground>
+    );
+  }
+
+  /* =========================================================
+     MAIN UI
+  ========================================================= */
+
   return (
-    <PageBackground className ="results-page">
-      
+    <PageBackground className="results-page">
+
       {/* ================= NAVBAR ================= */}
+
       <Navbar />
 
       {/* ================= RESULTS ================= */}
+
       <main className="results-container">
 
         {/* HEADER */}
@@ -41,19 +234,34 @@ function Results() {
         <div className="results-title">
 
           <div className="results-title-icon">
-            <Trophy size={30} strokeWidth={2} />
+            <Trophy
+              size={30}
+              strokeWidth={2}
+            />
           </div>
 
           <div className="results-title-text">
-            <h1>RESULT</h1>
+
+            <h1>
+              RESULT
+            </h1>
 
             <p>
               Here's how you performed in the event
             </p>
+
+            {resultData.teamname && (
+              <p>
+                Team:{" "}
+                <strong>
+                  {resultData.teamname}
+                </strong>
+              </p>
+            )}
+
           </div>
 
         </div>
-
 
         {/* ================= MAIN CONTENT ================= */}
 
@@ -83,7 +291,6 @@ function Results() {
 
               </div>
 
-
               {/* SCORE */}
 
               <div className="result-card">
@@ -102,7 +309,6 @@ function Results() {
 
               </div>
 
-
               {/* TOTAL SUBMISSIONS */}
 
               <div className="result-card">
@@ -120,7 +326,6 @@ function Results() {
                 </div>
 
               </div>
-
 
               {/* ACCURACY */}
 
@@ -142,7 +347,6 @@ function Results() {
 
             </div>
 
-
             {/* VIEW LEADERBOARD */}
 
             <button
@@ -162,7 +366,6 @@ function Results() {
 
           </div>
 
-
           {/* ================= ACCURACY ================= */}
 
           <div className="accuracy-box">
@@ -175,7 +378,7 @@ function Results() {
             >
 
               <div className="accuracy-value">
-                {resultData.accuracy}%
+                {resultData.accuracy.toFixed(2)}%
               </div>
 
             </div>

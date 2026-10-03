@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../App.css";
 import Navbar from "../components/Navbar";
@@ -14,37 +13,79 @@ const instructions = [
 export default function Instructions() {
   const navigate = useNavigate();
 
+  const handleProceed = () => {
+    navigate("/question-hub");
+  };
+
   return (
     <main className="event-page">
+
+      {/* =========================
+          NAVBAR
+      ========================== */}
+
       <Navbar />
 
+
+      {/* =========================
+          CONTENT
+      ========================== */}
+
       <section className="content instructions-content">
+
+        {/* HEADING */}
+
         <div className="page-heading">
           <h1>INSTRUCTIONS</h1>
           <span />
         </div>
 
+
+        {/* INSTRUCTIONS */}
+
         <div className="instruction-list">
+
           {instructions.map((item, index) => (
-            <article className="instruction-row" key={item}>
+            <article
+              className="instruction-row"
+              key={item}
+            >
+
               <div className="instruction-number">
                 {String(index + 1).padStart(2, "0")}
               </div>
-              <p>{item}</p>
-              <div className="instruction-icon">
-                {["♧", "◷", "▤", "⚠", "↗"][index]}
+
+              <p>
+                {item}
+              </p>
+
+              <div
+                className="instruction-icon"
+                aria-hidden="true"
+              >
+                {
+                  ["♧", "◷", "▤", "⚠", "↗"][index]
+                }
               </div>
+
             </article>
           ))}
+
         </div>
+
+
+        {/* PROCEED */}
 
         <button
           className="primary-btn proceed-btn"
-          onClick={() => navigate("/question-hub")}
+          type="button"
+          onClick={handleProceed}
         >
           PROCEED <span>→</span>
         </button>
+
       </section>
+
     </main>
   );
 }

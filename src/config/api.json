@@ -1,3 +1,22 @@
 {
-  "BASE_URL": "http://localhost:3000"
+  "BASE_URL": "/api",
+  "AUTH": {
+    "LOGIN": "/user/login",
+    "LOGOUT": "/user/logout"
+  },
+  "QUESTIONS": {
+    "GET_ALL": "/problems/accuracy",
+    "GET_BY_ID": "/problems/:id",
+    "RUN": "/submission/run",
+    "SUBMIT": "/submission/submit",
+    "RUN_SYSTEM": "/submission/run-system",
+    "HISTORY": "/user/gethistory"
+  },
+  "RESULTS": {
+    "GET_ALL": "/result/"
+  },
+  "LEADERBOARD": {
+    "GET_LEADERBOARD": "/leaderboard/"
+  },
+  "TIME": "/time"
 }

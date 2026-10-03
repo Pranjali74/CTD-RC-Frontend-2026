@@ -99,7 +99,7 @@ CREATE UNIQUE INDEX events_name_key10 ON public.events USING btree (name);
 DO $$ BEGIN PERFORM setval('"public"."events_id_seq"', 3); END $$;
 
 INSERT INTO "events" ("id", "name", "start_time", "end_time", "is_active", "created_at", "updated_at") VALUES
-(1,	'Programming Contest 2026',	'2026-09-01 10:00:00+00',	'2026-09-10 13:00:00+00',	'1',	'2026-09-03 09:28:15.287397+00',	'2026-09-03 09:28:15.287397+00');
+(1,	'Programming Contest 2026',	'2026-09-01 10:00:00+00',	'2027-09-10 13:00:00+00',	'1',	'2026-09-03 09:28:15.287397+00',	'2026-09-03 09:28:15.287397+00');
 
 CREATE TABLE "public"."leaderboards" (
     "id" serial NOT NULL,

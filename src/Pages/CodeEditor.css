@@ -1243,3 +1243,160 @@
     justify-content: space-between;
   }
 }
+
+/* =========================================================
+   CUSTOM INPUT / OUTPUT
+========================================================= */
+
+.custom-io-panel {
+  width: 100%;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  gap: 12px;
+
+  padding: 12px 14px;
+
+  box-sizing: border-box;
+
+  background:
+    rgba(3, 27, 25, 0.98);
+}
+
+
+/* =========================================================
+   INPUT / OUTPUT BOX
+========================================================= */
+
+.custom-io-box {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 7px;
+}
+
+
+/* =========================================================
+   LABEL
+========================================================= */
+
+.custom-io-label {
+  color: #a5d5c5;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+
+/* =========================================================
+   CUSTOM INPUT
+========================================================= */
+
+.custom-input {
+  width: 100%;
+  height: 72px;
+
+  padding: 10px 12px;
+
+  box-sizing: border-box;
+
+  resize: vertical;
+
+  border: 1px solid
+    rgba(82, 219, 169, 0.32);
+
+  border-radius: 6px;
+
+  background:
+    rgba(2, 22, 20, 0.92);
+
+  color: #dffbed;
+
+  font-family:
+    Consolas,
+    "Courier New",
+    monospace;
+
+  font-size: 12px;
+
+  line-height: 1.5;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+.custom-input::placeholder {
+  color: #587a70;
+}
+
+
+.custom-input:focus {
+  border-color:
+    rgba(82, 219, 169, 0.75);
+
+  box-shadow:
+    0 0 0 2px
+    rgba(82, 219, 169, 0.08);
+}
+
+
+/* =========================================================
+   OUTPUT
+========================================================= */
+
+.custom-output {
+  width: 100%;
+  height: 72px;
+
+  margin: 0;
+
+  padding: 10px 12px;
+
+  box-sizing: border-box;
+
+  overflow: auto;
+
+  border: 1px solid
+    rgba(82, 219, 169, 0.32);
+
+  border-radius: 6px;
+
+  background:
+    rgba(2, 22, 20, 0.92);
+
+  color: #bff7df;
+
+  font-family:
+    Consolas,
+    "Courier New",
+    monospace;
+
+  font-size: 12px;
+
+  line-height: 1.5;
+
+  white-space: pre-wrap;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .custom-io-panel {
+    grid-template-columns: 1fr;
+  }
+
+}
