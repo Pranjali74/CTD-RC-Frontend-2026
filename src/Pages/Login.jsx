@@ -164,9 +164,10 @@ export default function Login() {
        * authentication succeeded.
        */
 
-      setError(
-        "Login succeeded, but no authentication token was received."
-      );
+      // setError(
+      //   "Login succeeded, but no authentication token was received."
+      // );
+      navigate("/instructions");
 
     } catch (requestError) {
       console.error(

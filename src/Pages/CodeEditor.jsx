@@ -12,6 +12,7 @@ import {
 import Navbar from "../components/Navbar";
 import PageBackground from "../components/PageBackground";
 import api from "../api/axios";
+import Timer from "../components/Timer";
 
 import "./CodeEditor.css";
 
@@ -47,6 +48,23 @@ function getBackendLanguage(language) {
   }
 
   return "python";
+}
+
+function formatSubmissionDate(value) {
+  if (!value) {
+    return "";
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return new Intl.DateTimeFormat(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(date);
 }
 
 /* =========================================================
@@ -173,6 +191,9 @@ function CodeEditor() {
   const [isRunning, setIsRunning] =
     useState(false);
 
+  const [isMachineRunning, setIsMachineRunning] =
+    useState(false);
+
   const [customInput, setCustomInput] = useState("");
 
   /* Submit */
@@ -188,6 +209,10 @@ function CodeEditor() {
   const [submissions, setSubmissions] =
     useState([]);
 
+
+  const [machineInput, setMachineInput] = useState("");
+  const [machineOutput, setMachineOutput] = useState("");
+  const [lastInput, setLastInput] = useState("");
   /* SSE connections */
 
   const activeStreamsRef =
@@ -237,56 +262,46 @@ int main() {
   }, []);
 
   /* =======================================================
-     FETCH QUESTION
-  ======================================================= */
+   FETCH QUESTION
+======================================================= */
 
-  useEffect(() => {
-    if (!questionId) {
-      setQuestionLoading(false);
+useEffect(() => {
+  const fetchQuestion = async () => {
+    setQuestionLoading(true);
 
-      navigate("/question-hub", {
-        replace: true,
-      });
+    try {
+      const response = await api.get(
+        `/problems/${questionId}`
+      );
 
-      return;
-    }
+      setQuestion(response.data);
+    } catch (error) {
+      console.error(
+        "Error fetching question:",
+        error
+      );
 
-    const fetchQuestion = async () => {
-      setQuestionLoading(true);
+      if (
+        error?.response?.status === 403
+      ) {
+        navigate("/results", {
+          replace: true,
+        });
 
-      try {
-        const response = await api.get(
-          `/problems/${questionId}`
-        );
-
-        setQuestion(response.data);
-      } catch (error) {
-        console.error(
-          "Error fetching question:",
-          error
-        );
-
-        if (
-          error?.response?.status === 403
-        ) {
-          navigate("/results", {
-            replace: true,
-          });
-
-          return;
-        }
-
-        setRunMessage(
-          error?.response?.data?.message ||
-            "Unable to load question."
-        );
-      } finally {
-        setQuestionLoading(false);
+        return;
       }
-    };
 
-    fetchQuestion();
-  }, [questionId, navigate]);
+      setRunMessage(
+        error?.response?.data?.message ||
+          "Unable to load question."
+      );
+    } finally {
+      setQuestionLoading(false);
+    }
+  };
+
+  fetchQuestion();
+}, [questionId, navigate]);
 
   /* =======================================================
      LOAD DEFAULT / SAVED CODE
@@ -553,154 +568,167 @@ int main() {
 ========================================================= */
 
   const handleMachineRun = async () => {
-    if (!code.trim()) {
-      setShowResults(true);
-      setTestsPassed(false);
+  /* =========================================
+     VALIDATION
+  ========================================= */
 
-      setRunMessage(
-        "Please write your code first."
+  if (!code.trim()) {
+    setMachineOutput(
+      "Please write your code first."
+    );
+    return;
+  }
+
+  if (!machineInput.trim()) {
+    setMachineOutput(
+      "Please enter input first."
+    );
+    return;
+  }
+
+
+  /* =========================================
+     START MACHINE RUN
+  ========================================= */
+
+  setIsMachineRunning(true);
+
+  setMachineOutput("");
+
+  setLastInput(machineInput);
+
+
+  /* =========================================
+     PAYLOAD
+  ========================================= */
+
+  const payload = {
+    customTestcase:
+      encodeBase64(machineInput),
+
+    problem_id:
+      question?.id || questionId,
+
+    event_id: 2,
+  };
+
+
+  try {
+
+    const response =
+      await api.post(
+        "/submission/run-system",
+        payload
+      );
+
+
+    const submissionId =
+      response.data?.submission_id;
+
+
+    /* =========================================
+       SSE RESULT
+    ========================================= */
+
+    if (submissionId) {
+
+      subscribeToSubmission(
+        submissionId,
+
+        (data) => {
+
+          const result =
+            data.user_output ??
+            data.output ??
+            data.message ??
+            data.status ??
+            "No output";
+
+
+          setMachineOutput(
+            String(result)
+          );
+
+
+          setIsMachineRunning(false);
+        },
+
+        activeStreamsRef.current,
+
+        (error) => {
+
+          console.error(
+            "Machine run SSE error:",
+            error
+          );
+
+
+          setMachineOutput(
+            "Unable to receive machine test result."
+          );
+
+
+          setIsMachineRunning(false);
+        }
       );
 
       return;
     }
 
-    setIsRunning(true);
-    setShowResults(true);
 
-    setOutput("");
+    /* =========================================
+       DIRECT RESPONSE FALLBACK
+    ========================================= */
 
-    setRunMessage(
-      "Running machine test..."
+    const directOutput =
+      response.data?.user_output ??
+      response.data?.output ??
+      response.data?.message ??
+      "Machine test completed.";
+
+
+    setMachineOutput(
+      String(directOutput)
     );
 
-    setTestsPassed(false);
-    setSubmitResult(null);
 
-    const firstSample =
-      question?.samples?.[0];
+    setIsMachineRunning(false);
 
-    const sampleInput =
-      question?.sampleInput ??
-      firstSample?.input ??
-      "";
+  } catch (error) {
 
-    try {
-      const response =
-        await api.post(
-          "/submission/run-system",
-          {
-            customTestcase:
-              encodeBase64(sampleInput),
+    console.error(
+      "Machine run error:",
+      error
+    );
 
-            problem_id:
-              question?.id || questionId,
 
-            event_id: 2,
-          }
-        );
+    if (
+      error?.response?.status === 403
+    ) {
+      setIsMachineRunning(false);
 
-      const submissionId =
-        response.data?.submission_id;
+      navigate("/results", {
+        replace: true,
+      });
 
-      /*
-       * If backend returns a submission ID,
-       * use SSE to receive the final result.
-       */
+      return;
+    }
 
-      if (submissionId) {
-        subscribeToSubmission(
-          submissionId,
 
-          (data) => {
-            if (data.user_output) {
-              setOutput(
-                data.user_output
-              );
-            } else {
-              setOutput(
-                data.message ||
-                  data.status ||
-                  "No output"
-              );
-            }
-
-            const accepted =
-              String(
-                data.status || ""
-              ).toLowerCase() ===
-              "accepted";
-
-            setTestsPassed(
-              accepted
-            );
-
-            setRunMessage(
-              data.message ||
-                "Machine test completed."
-            );
-
-            setIsRunning(false);
-          },
-
-          activeStreamsRef.current,
-
-          (error) => {
-            setIsRunning(false);
-            setTestsPassed(false);
-
-            setRunMessage(
-              error.message ||
-                "Machine test connection failed."
-            );
-          }
-        );
-
-        return;
-      }
-
-      /*
-       * Some backend versions may return
-       * the output directly.
-       */
-
-      setOutput(
-        response.data?.user_output ||
-          response.data?.output ||
-          response.data?.message ||
-          "Machine test completed."
-      );
-
-      setRunMessage(
-        response.data?.message ||
-          "Machine test completed."
-      );
-
-      setIsRunning(false);
-    } catch (error) {
-      console.error(
-        "Machine run error:",
-        error
-      );
-
-      if (
-        error?.response?.status === 403
-      ) {
-        navigate("/results");
-        return;
-      }
-
-      setOutput(
-        error?.response?.data?.message ||
+    setMachineOutput(
+      "Error: " +
+        (
+          error?.response?.data
+            ?.message ||
           error?.message ||
           "Unable to run machine test."
-      );
+        )
+    );
 
-      setRunMessage("");
 
-      setIsRunning(false);
-    }
-  };
-
+    setIsMachineRunning(false);
+  }
+};
   /* =======================================================
      SUBMIT CODE
   ======================================================= */
@@ -903,18 +931,9 @@ int main() {
     question?.sampleCases ||
     [];
 
-  const firstSample =
-    samples[0] || {};
+  // const firstSample =
+  //   samples[0] || {};
 
-  const sampleInput =
-    question?.sampleInput ??
-    firstSample.input ??
-    "";
-
-  const sampleOutput =
-    question?.sampleOutput ??
-    firstSample.output ??
-    "";
 
   /* =======================================================
      DESCRIPTION
@@ -1092,9 +1111,10 @@ int main() {
                     </strong>
 
                     <span>
-                      {submission.created_at ||
-                        submission.submitted_at ||
-                        ""}
+                      {formatSubmissionDate(
+                        submission.created_at ||
+                          submission.submitted_at
+                      )}
                     </span>
                   </div>
 
@@ -1153,7 +1173,10 @@ int main() {
   return (
     <PageBackground className="code-page">
       <Navbar />
-
+      
+        <Timer />
+    
+      
       <main className="code-main">
 
         {/* BACK */}
@@ -1303,55 +1326,98 @@ int main() {
                 TEST CASE
             ================================================== */}
 
-            {activeTab ===
-              "Description" && (
-              <div className="test-case-panel">
+            {/* =================================================
+    MACHINE RUN
+================================================= */}
 
-                <div className="test-case-title">
-                  Test Case
-                </div>
+{activeTab === "Description" && (
+  <div className="mt-2 rounded-lg border border-emerald-400/30 bg-[rgba(3,30,27,0.9)] p-3 shadow-[inset_0_1px_0_rgba(170,255,225,0.03)]">
 
-                <div className="test-case-inputs">
+    <div className="mb-3 border-b border-emerald-400/20 pb-2 text-sm font-extrabold text-[#8ff1c8]">
+      Machine Run
+    </div>
 
-                  <div className="test-case-field">
-                    <label>
-                      Input
-                    </label>
 
-                    <div className="test-case-box">
-                      {sampleInput}
-                    </div>
-                  </div>
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
 
-                  <div className="test-case-field">
-                    <label>
-                      Expected Output
-                    </label>
+      {/* =========================================
+          CUSTOM INPUT
+      ========================================= */}
 
-                    <div className="test-case-box">
-                      {sampleOutput}
-                    </div>
-                  </div>
+      <div>
 
-                </div>
+        <label htmlFor="machine-input" className="mb-1.5 block text-[11px] font-bold text-[#a9cfc0]">
+          Input
+        </label>
 
-                <button
-                  className="machine-run-button"
-                  onClick={
-                    handleMachineRun
-                  }
-                  disabled={
-                    isRunning ||
-                    isSubmitting
-                  }
-                >
-                  {isRunning
-                    ? "Running..."
-                    : "Machine Run"}
-                </button>
+        <textarea
+          id="machine-input"
+          className="w-full h-[120px] resize-none rounded-md border border-emerald-400/30 bg-[#072521] p-2.5 font-mono text-xs leading-relaxed text-[#dcf8eb] placeholder:text-emerald-100/40 focus:border-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-300/20"
+          rows={6}
+          value={machineInput}
+          onChange={(e) =>
+            setMachineInput(e.target.value)
+          }
+          placeholder="Enter input here"
+          spellCheck="false"
+        />
 
-              </div>
-            )}
+      </div>
+
+
+      {/* =========================================
+          MACHINE OUTPUT
+      ========================================= */}
+
+      <div>
+
+        <label htmlFor="machine-output" className="mb-1.5 block text-[11px] font-bold text-[#a9cfc0]">
+          Output
+        </label>
+
+        <textarea
+          id="machine-output"
+          className="w-full h-[120px] resize-none rounded-md border border-emerald-400/30 bg-[#072521] p-2.5 font-mono text-xs leading-relaxed text-[#dcf8eb] placeholder:text-emerald-100/40 focus:border-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-300/20 read-only:cursor-default"
+          rows={6}
+          value={machineOutput || ""}
+          readOnly
+          placeholder="Output will appear here..."
+          spellCheck="false"
+        />
+
+      </div>
+
+    </div>
+
+
+    {/* =========================================
+        MACHINE RUN BUTTON
+    ========================================= */}
+
+    <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">
+
+      <button
+        type="button"
+        className="inline-flex min-h-10 w-full items-center justify-center rounded-md border border-emerald-300/70 bg-[#55e2ad] px-5 text-xs font-extrabold text-[#03251d] shadow-[0_0_14px_rgba(85,226,173,0.16)] transition hover:bg-[#78ecc0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-200 focus-visible:ring-offset-2 focus-visible:ring-offset-[#031e1b] disabled:cursor-not-allowed disabled:border-emerald-300/20 disabled:bg-[#3b5d54]/50 disabled:text-[#8daaa0] disabled:shadow-none sm:w-auto"
+        onClick={handleMachineRun}
+        disabled={
+          isRunning ||
+          isMachineRunning ||
+          isSubmitting ||
+          machineInput.trim() === "" ||
+          lastInput === machineInput
+        }
+      >
+        {isMachineRunning
+          ? "Machine Running..."
+          : "Machine Run"}
+      </button>
+
+
+    </div>
+
+  </div>
+)}
 
           </section>
 
@@ -1380,36 +1446,87 @@ int main() {
               </div>
 
               <textarea
-                value={code}
-                onChange={(e) =>
-                  setCode(
-                    e.target.value
-                  )
-                }
-                spellCheck="false"
-                className="code-textarea"
-                placeholder={
-                  language ===
-                  "Python"
-                    ? 'print("Hello, World!")'
-                    : language ===
-                      "Java"
-                    ? `import java.util.*;
+  value={code}
+  onChange={(e) => {
+    setCode(e.target.value);
+  }}
+
+  /* ================================
+     BLOCK PASTE
+  ================================= */
+
+  onPaste={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  }}
+
+  /* ================================
+     BLOCK DRAG & DROP
+  ================================= */
+
+  onDrop={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  }}
+
+  /* ================================
+     BLOCK COPY / CUT / PASTE SHORTCUTS
+  ================================= */
+
+  onKeyDown={(e) => {
+    const key = e.key.toLowerCase();
+
+    // Ctrl + V
+    if (e.ctrlKey && key === "v") {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+
+    // Ctrl + Shift + V
+    if (e.ctrlKey && e.shiftKey && key === "v") {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+
+    // Ctrl + Insert
+    if (e.ctrlKey && e.key === "Insert") {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+
+    // Mac: Cmd + V
+    if (e.metaKey && key === "v") {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+  }}
+
+  spellCheck="false"
+  className="code-textarea"
+  placeholder={
+    language === "Python"
+      ? 'print("Hello, World!")'
+      : language === "Java"
+      ? `import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
         System.out.println("Hello, World!");
     }
 }`
-                    : `#include <iostream>
+      : `#include <iostream>
 using namespace std;
 
 int main() {
     cout << "Hello, World!" << endl;
     return 0;
 }`
-                }
-              />
+  }
+/>
 
             </div>
 
@@ -1423,54 +1540,58 @@ int main() {
 
                 <div className="result-status">
 
-                  {showResults &&
-                    !testsPassed && (
-                      <XCircle
-                        size={15}
-                      />
-                    )}
+  {/* =========================================
+      STATUS ICON
+  ========================================= */}
 
-                  {showResults &&
-                    testsPassed && (
-                      <CheckCircle
-                        size={15}
-                      />
-                    )}
+  {showResults && submitResult && !testsPassed && (
+    <XCircle size={15} />
+  )}
 
-                  <span>
-                    Status:{" "}
+  {showResults && submitResult && testsPassed && (
+    <CheckCircle size={15}
+    className="status-success" />
+  )}
 
-                    <strong
-                      className={
-                        testsPassed
-                          ? "status-success"
-                          : "status-error"
-                      }
-                    >
-                      {showResults
-                        ? testsPassed
-                          ? "accepted"
-                          : "wrong"
-                        : "not run"}
-                    </strong>
-                  </span>
+  <span>
+    Status:{" "}
 
-                  <span>
-                    Score:{" "}
+    <strong
+      className={
+        submitResult
+          ? testsPassed
+            ? "status-success"
+            : "status-error"
+          : showResults
+          ? "status-success"
+          : "status-error"
+      }
+    >
+      {submitResult
+        ? testsPassed
+          ? "accepted"
+          : "wrong"
+        : showResults
+        ? "executed"
+        : "not run"}
+    </strong>
+  </span>
 
-                    <strong>
-                      {submitResult
-                        ? submitResult.score ??
-                          0
-                        : showResults &&
-                          testsPassed
-                        ? question?.points ??
-                          0
-                        : 0}
-                    </strong>
-                  </span>
+  {/* =========================================
+      SCORE
+  ========================================= */}
 
-                </div>
+  <span>
+    Score:{" "}
+
+    <strong>
+      {submitResult
+        ? submitResult.score ?? 0
+        : 0}
+    </strong>
+  </span>
+
+</div>
 
                 <button
                   className="close-results"
@@ -1535,7 +1656,7 @@ int main() {
               {showResults && (
                 <div className="output-area">
 
-                  <div className="output-heading">
+                  {/* <div className="output-heading">
                     Current Output
                   </div>
 
@@ -1548,7 +1669,7 @@ int main() {
                     <div className="run-message">
                       {runMessage}
                     </div>
-                  )}
+                  )} */}
 
                   {/* SUBMISSION TEST CASES */}
 
@@ -1632,7 +1753,7 @@ int main() {
                     </>
                   ) : (
                     <>
-                      <div className="test-result">
+                      {/* <div className="test-result">
 
                         <span>
                           Test Case 1
@@ -1656,7 +1777,7 @@ int main() {
                           Not Run
                         </span>
 
-                      </div>
+                      </div> */}
                     </>
                   )}
 
@@ -1676,6 +1797,7 @@ int main() {
                 onClick={handleRun}
                 disabled={
                   isRunning ||
+                  isMachineRunning ||
                   isSubmitting
                 }
               >
@@ -1694,7 +1816,8 @@ int main() {
                 onClick={handleSubmit}
                 disabled={
                   isSubmitting ||
-                  isRunning
+                  isRunning ||
+                  isMachineRunning
                 }
               >
                 <Send size={15} />

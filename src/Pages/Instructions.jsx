@@ -13,9 +13,18 @@ const instructions = [
 export default function Instructions() {
   const navigate = useNavigate();
 
-  const handleProceed = () => {
-    navigate("/question-hub");
-  };
+const handleProceed = async () => {
+  try {
+    await document.documentElement.requestFullscreen();
+  } catch (error) {
+    console.error("Unable to enter fullscreen:", error);
+  }
+
+  // Reset fullscreen violation count when contest starts
+  sessionStorage.setItem("fullscreenViolations", "0");
+
+  navigate("/question-hub");
+};
 
   return (
     <main className="event-page">

@@ -166,6 +166,7 @@ function Timer() {
   ========================================================= */
 
   return (
+    <div className="event-timer-container">
     <div className="event-timer">
       <span>
         {remainingMs === null
@@ -174,6 +175,7 @@ function Timer() {
               remainingMs
             )}
       </span>
+    </div>
     </div>
   );
 }

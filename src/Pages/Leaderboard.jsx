@@ -4,6 +4,23 @@ import "../App.css";
 import Navbar from "../components/Navbar";
 import api from "../api/axios";
 
+function formatSubmissionTime(value) {
+  if (!value) {
+    return "-";
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "-";
+  }
+
+  return new Intl.DateTimeFormat(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(date);
+}
+
 export default function Leaderboard() {
   const navigate = useNavigate();
 
@@ -274,7 +291,7 @@ export default function Leaderboard() {
                         </td>
 
                         <td>
-                          {item.time}
+                          {formatSubmissionTime(item.time)}
                         </td>
 
                       </tr>
