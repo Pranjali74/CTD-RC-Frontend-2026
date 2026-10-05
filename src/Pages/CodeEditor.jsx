@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import Editor from "@monaco-editor/react";
 import {
   ChevronDown,
   Play,
@@ -217,7 +218,8 @@ function CodeEditor() {
 
   const activeStreamsRef =
     useRef(new Map());
-
+  const editorRef = useRef(null);
+  const monacoCleanupRef = useRef(null);  
   /* =======================================================
      DEFAULT CODE
   ======================================================= */
@@ -243,23 +245,166 @@ int main() {
   };
 
   /* =======================================================
+   MONACO EDITOR THEME
+======================================================= */
+
+const handleEditorBeforeMount = (monaco) => {
+  monaco.editor.defineTheme("ctd-rc-theme", {
+    base: "vs-dark",
+    inherit: true,
+
+    rules: [
+      {
+        token: "keyword",
+        foreground: "C792EA",
+        fontStyle: "bold",
+      },
+      {
+        token: "keyword.control",
+        foreground: "C792EA",
+        fontStyle: "bold",
+      },
+      {
+        token: "string",
+        foreground: "C3E88D",
+      },
+      {
+        token: "string.escape",
+        foreground: "FFCB6B",
+      },
+      {
+        token: "number",
+        foreground: "F78C6C",
+      },
+      {
+        token: "number.hex",
+        foreground: "F78C6C",
+      },
+      {
+        token: "comment",
+        foreground: "6A9955",
+        fontStyle: "italic",
+      },
+      {
+        token: "predefined",
+        foreground: "82AAFF",
+      },
+      {
+        token: "type",
+        foreground: "4EC9B0",
+      },
+      {
+        token: "type.identifier",
+        foreground: "4EC9B0",
+      },
+      {
+        token: "function",
+        foreground: "82AAFF",
+      },
+      {
+        token: "identifier",
+        foreground: "D6F5E8",
+      },
+      {
+        token: "variable",
+        foreground: "D6F5E8",
+      },
+      {
+        token: "operator",
+        foreground: "89DDFF",
+      },
+      {
+        token: "delimiter",
+        foreground: "B8D8CC",
+      },
+    ],
+
+    colors: {
+      "editor.background": "#031E1B",
+      "editor.foreground": "#D6F5E8",
+      "editorLineNumber.foreground": "#587C70",
+      "editorLineNumber.activeForeground": "#8FF1C8",
+      "editorCursor.foreground": "#8FF1C8",
+      "editor.selectionBackground": "#1D5A4A",
+      "editor.lineHighlightBackground": "#062823",
+      "editorGutter.background": "#041D1B",
+      "editorIndentGuide.background": "#103A32",
+      "editorIndentGuide.activeBackground": "#1B5B4D",
+    },
+  });
+};
+
+const handleEditorMount = (editor, monaco) => {
+  editorRef.current = editor;
+
+  monaco.editor.setTheme("ctd-rc-theme");
+
+  const domNode = editor.getDomNode();
+
+  if (!domNode) {
+    return;
+  }
+
+  const blockClipboard = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
+  domNode.addEventListener(
+    "paste",
+    blockClipboard
+  );
+
+  domNode.addEventListener(
+    "copy",
+    blockClipboard
+  );
+
+  domNode.addEventListener(
+    "cut",
+    blockClipboard
+  );
+
+  monacoCleanupRef.current = () => {
+    domNode.removeEventListener(
+      "paste",
+      blockClipboard
+    );
+
+    domNode.removeEventListener(
+      "copy",
+      blockClipboard
+    );
+
+    domNode.removeEventListener(
+      "cut",
+      blockClipboard
+    );
+  };
+};
+
+  /* =======================================================
      CLEANUP SSE CONNECTIONS
   ======================================================= */
 
-  useEffect(() => {
-    const activeStreams =
-      activeStreamsRef.current;
+useEffect(() => {
+  const activeStreams =
+    activeStreamsRef.current;
 
-    return () => {
-      activeStreams.forEach(
-        (eventSource) => {
-          eventSource.close();
-        }
-      );
+  return () => {
+    activeStreams.forEach(
+      (eventSource) => {
+        eventSource.close();
+      }
+    );
 
-      activeStreams.clear();
-    };
-  }, []);
+    activeStreams.clear();
+
+    if (monacoCleanupRef.current) {
+      monacoCleanupRef.current();
+    }
+  };
+}, []);
 
   /* =======================================================
    FETCH QUESTION
@@ -1172,12 +1317,9 @@ useEffect(() => {
 
   return (
     <PageBackground className="code-page">
-      <Navbar />
-      
-        <Timer />
-    
-      
+      <Navbar />    
       <main className="code-main">
+      <div className="code-top-row">
 
         {/* BACK */}
 
@@ -1189,7 +1331,8 @@ useEffect(() => {
 
           Back to Questions
         </button>
-
+        <Timer />
+        </div>
         {/* =================================================
             TOP BAR
         ================================================== */}
@@ -1429,106 +1572,76 @@ useEffect(() => {
 
             {/* CODE EDITOR */}
 
-            <div className="editor-container">
+            <div className="editor-container monaco-editor-container">
+          <Editor
+            height="100%"
+            width="100%"
+            language={
+              language === "Python"
+                ? "python"
+                : language === "Java"
+                ? "java"
+                : "cpp"
+            }
+            value={code}
+            onChange={(value) => {
+              setCode(value ?? "");
+            }}
+            beforeMount={handleEditorBeforeMount}
+            onMount={handleEditorMount}
+            theme="ctd-rc-theme"
+            options={{
+              automaticLayout: true,
 
-              <div className="line-numbers">
-                {code
-                  .split("\n")
-                  .map(
-                    (_, index) => (
-                      <span
-                        key={index}
-                      >
-                        {index + 1}
-                      </span>
-                    )
-                  )}
-              </div>
+              fontFamily:
+                '"Consolas", "Courier New", monospace',
 
-              <textarea
-  value={code}
-  onChange={(e) => {
-    setCode(e.target.value);
-  }}
+              fontSize: 17,
+              lineHeight: 28,
 
-  /* ================================
-     BLOCK PASTE
-  ================================= */
+              fontLigatures: true,
 
-  onPaste={(e) => {
-    e.preventDefault();
-    e.stopPropagation();
-  }}
+              minimap: {
+                enabled: false,
+              },
 
-  /* ================================
-     BLOCK DRAG & DROP
-  ================================= */
+              lineNumbers: "on",
 
-  onDrop={(e) => {
-    e.preventDefault();
-    e.stopPropagation();
-  }}
+              glyphMargin: false,
 
-  /* ================================
-     BLOCK COPY / CUT / PASTE SHORTCUTS
-  ================================= */
+              folding: false,
 
-  onKeyDown={(e) => {
-    const key = e.key.toLowerCase();
+              lineDecorationsWidth: 8,
 
-    // Ctrl + V
-    if (e.ctrlKey && key === "v") {
-      e.preventDefault();
-      e.stopPropagation();
-      return;
-    }
+              lineNumbersMinChars: 3,
 
-    // Ctrl + Shift + V
-    if (e.ctrlKey && e.shiftKey && key === "v") {
-      e.preventDefault();
-      e.stopPropagation();
-      return;
-    }
+              scrollBeyondLastLine: false,
 
-    // Ctrl + Insert
-    if (e.ctrlKey && e.key === "Insert") {
-      e.preventDefault();
-      e.stopPropagation();
-      return;
-    }
+              wordWrap: "off",
 
-    // Mac: Cmd + V
-    if (e.metaKey && key === "v") {
-      e.preventDefault();
-      e.stopPropagation();
-      return;
-    }
-  }}
+              renderWhitespace: "selection",
 
-  spellCheck="false"
-  className="code-textarea"
-  placeholder={
-    language === "Python"
-      ? 'print("Hello, World!")'
-      : language === "Java"
-      ? `import java.util.*;
+              roundedSelection: false,
 
-public class Main {
-    public static void main(String[] args) {
-        System.out.println("Hello, World!");
-    }
-}`
-      : `#include <iostream>
-using namespace std;
+              cursorBlinking: "smooth",
 
-int main() {
-    cout << "Hello, World!" << endl;
-    return 0;
-}`
-  }
-/>
+              smoothScrolling: true,
 
-            </div>
+              padding: {
+                top: 18,
+                bottom: 18,
+              },
+
+              contextmenu: false,
+
+              suggestOnTriggerCharacters: true,
+
+              tabSize: 4,
+
+              insertSpaces: true,
+            }}
+          />
+          </div>
 
             {/* =================================================
                 OUTPUT / TEST RESULT

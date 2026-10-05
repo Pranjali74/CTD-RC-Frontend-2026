@@ -39,26 +39,22 @@ button {
 /* =========================
    EVENT TIMER - COMPACT
 ========================= */
-.event-timer-container {
-  width: 100%;
-
+ .event-timer-container {
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0;
   display: flex;
-  justify-content: flex-end;
   align-items: center;
-
-  padding: 8px 48px 6px 28px;
-
-  box-sizing: border-box;
-
+  justify-content: flex-end;
   position: relative;
-
   z-index: 10;
-
   pointer-events: none;
 }
 
 .event-timer {
   width: 135px;
+  min-width: 135px;
   height: 40px;
 
   display: flex;
@@ -66,20 +62,15 @@ button {
   justify-content: center;
 
   padding: 0 12px;
-
   box-sizing: border-box;
 
   background: rgba(5, 42, 35, 0.96);
-
   border: 2px solid rgba(82, 219, 169, 0.65);
-
   border-radius: 22px;
 
   color: #8ff1c8;
-
   font-size: 15px;
   font-weight: 800;
-
   letter-spacing: 0.7px;
 
   box-shadow:
@@ -87,6 +78,70 @@ button {
     inset 0 0 10px rgba(82, 219, 169, 0.05);
 
   white-space: nowrap;
+} 
+
+.code-top-row {
+  width: 100%;
+  height: 44px;
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.code-top-row .back-question {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 0;
+}
+
+.code-top-row .event-timer-container {
+  position: absolute !important;
+  right: 0 !important;
+  top: 0 !important;
+
+  width: 135px !important;
+  height: 40px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  display: block !important;
+
+  transform: none !important;
+}
+
+.code-top-row .event-timer {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+
+  width: 135px !important;
+  min-width: 135px !important;
+  height: 40px !important;
+
+  margin: 0 !important;
+  padding: 0 12px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  box-sizing: border-box;
+
+  background: rgba(5, 42, 35, 0.96);
+  border: 2px solid rgba(82, 219, 169, 0.65);
+  border-radius: 22px;
+
+  color: #8ff1c8;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+
+  white-space: nowrap;
+
+  box-shadow:
+    0 0 14px rgba(82, 219, 169, 0.16),
+    inset 0 0 10px rgba(82, 219, 169, 0.05);
 }
 
 /* Mobile */
