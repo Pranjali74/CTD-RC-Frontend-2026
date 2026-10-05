@@ -106,7 +106,7 @@ export default function Login() {
           teamname: cleanTeamname,
 
           // CTD RC event
-          event_id: 1,
+          event_id: 2,
 
           // false = Senior
           // true  = Junior

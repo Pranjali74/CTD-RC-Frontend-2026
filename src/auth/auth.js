@@ -1,6 +1,6 @@
 export const isAuthenticated = () => {
   return Boolean(
-    localStorage.getItem("token")
+    localStorage.getItem("isVerified") === "true"
   );
 };
 

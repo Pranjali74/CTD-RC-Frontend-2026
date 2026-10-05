@@ -17,7 +17,8 @@ import CodeEditor from "./Pages/CodeEditor";
 import Results from "./Pages/Results";
 import Submissions from "./Pages/Submissions";
 
-import { logout } from "./auth/auth";
+import ProtectedRoutes from "./ProtectedRoutes/ProtectedRoutes";
+import PublicRoutes from "./ProtectedRoutes/PublicRoutes";
 
 import "./App.css";
 
@@ -63,50 +64,48 @@ function FullscreenMonitor() {
         return;
       }
 
-      violations.current += 1;
+      // violations.current += 1;
 
-      sessionStorage.setItem(
-        "fullscreenViolations",
-        String(violations.current)
-      );
+      // sessionStorage.setItem(
+      //   "fullscreenViolations",
+      //   String(violations.current)
+      // );
 
-      console.log(
-        `Fullscreen violation: ${violations.current}/3`
-      );
+      
 
 
       /* =========================================
          THIRD VIOLATION
       ========================================= */
 
-      if (violations.current >= 3) {
+      // if (violations.current >= 3) {
 
-        sessionStorage.removeItem(
-          "fullscreenViolations"
-        );
+      //   sessionStorage.removeItem(
+      //     "fullscreenViolations"
+      //   );
 
-        logout();
+      //   logout();
 
-        alert(
-          "You have exited fullscreen 3 times. You have been logged out."
-        );
+      //   alert(
+      //     "You have exited fullscreen 3 times. You have been logged out."
+      //   );
 
-        navigate("/login", {
-          replace: true,
-        });
+      //   navigate("/login", {
+      //     replace: true,
+      //   });
 
-        return;
-      }
+      //   return;
+      // }
 
 
       /* =========================================
          FIRST / SECOND VIOLATION
       ========================================= */
 
-      alert(
-        `Warning ${violations.current}/3\n\n` +
-        "You must remain in fullscreen mode during the contest."
-      );
+      // alert(
+      //   `Warning ${violations.current}/3\n\n` +
+      //   "You must remain in fullscreen mode during the contest."
+      // );
 
       /*
        * Try to return to fullscreen.
@@ -175,55 +174,37 @@ function AppRoutes() {
             PUBLIC
         ========================= */}
 
-        <Route
-          path="/"
-          element={<Login />}
-        />
+        <Route element={<PublicRoutes />}>
+          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
+        </Route>
 
-        <Route
-          path="/login"
-          element={<Login />}
-        />
-
-
-        {/* =========================
-            INSTRUCTIONS
-        ========================= */}
-
-        <Route
-          path="/instructions"
-          element={<Instructions />}
-        />
-
-
-        {/* =========================
-            CONTEST PAGES
-        ========================= */}
-
-        <Route
-          path="/question-hub"
-          element={<QuestionHub />}
-        />
-
-        <Route
-          path="/leaderboard"
-          element={<Leaderboard />}
-        />
-
-        <Route
-          path="/code-editor"
-          element={<CodeEditor />}
-        />
-
-        <Route
-          path="/submissions"
-          element={<Submissions />}
-        />
-
-        <Route
-          path="/results"
-          element={<Results />}
-        />
+        <Route element={<ProtectedRoutes />}>
+          <Route
+            path="/instructions"
+            element={<Instructions />}
+          />
+          <Route
+            path="/question-hub"
+            element={<QuestionHub />}
+          />
+          <Route
+            path="/leaderboard"
+            element={<Leaderboard />}
+          />
+          <Route
+            path="/code-editor"
+            element={<CodeEditor />}
+          />
+          <Route
+            path="/submissions"
+            element={<Submissions />}
+          />
+          <Route
+            path="/results"
+            element={<Results />}
+          />
+        </Route>
 
 
         {/* =========================
