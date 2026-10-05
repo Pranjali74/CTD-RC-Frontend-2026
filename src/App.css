@@ -1855,3 +1855,79 @@ button {
 .fullscreen-warning-card button:hover {
   background: #8af5cb;
 }
+
+/* =========================================================
+   QUESTION HUB TIMER POSITION
+========================================================= */
+
+.question-hub-content {
+  position: relative !important;
+}
+
+.question-hub-content .qh-top-row {
+  position: absolute !important;
+
+  top: 25px !important;
+  right: 20px !important;
+
+  width: 135px !important;
+  height: 40px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  z-index: 200 !important;
+}
+
+.question-hub-content .qh-top-row .event-timer-container {
+  position: absolute !important;
+
+  top: 0 !important;
+  right: 0 !important;
+
+  width: 135px !important;
+  height: 40px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  display: block !important;
+}
+
+.question-hub-content .qh-top-row .event-timer {
+  position: absolute !important;
+
+  top: 0 !important;
+  right: 0 !important;
+
+  width: 135px !important;
+  min-width: 135px !important;
+  height: 40px !important;
+
+  margin: 0 !important;
+  padding: 0 12px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  box-sizing: border-box;
+
+  background: rgba(5, 42, 35, 0.96) !important;
+
+  border: 2px solid rgba(82, 219, 169, 0.65) !important;
+  border-radius: 22px !important;
+
+  color: #8ff1c8 !important;
+
+  font-size: 15px !important;
+  font-weight: 800 !important;
+
+  letter-spacing: 0.7px;
+
+  white-space: nowrap;
+
+  box-shadow:
+    0 0 14px rgba(82, 219, 169, 0.16),
+    inset 0 0 10px rgba(82, 219, 169, 0.05);
+}

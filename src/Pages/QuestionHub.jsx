@@ -184,7 +184,7 @@ export default function QuestionHub() {
 
       <Navbar />
 
-      <Timer />
+      
 
 
       {/* =========================
@@ -193,34 +193,33 @@ export default function QuestionHub() {
 
       <section className="question-hub-content">
 
-        {/* =========================
-            HEADING
-        ========================== */}
+  {/* TIMER ROW */}
+  <div className="qh-top-row">
+    <Timer />
+  </div>
 
-        <div className="question-hub-heading">
+  {/* HEADING */}
+  <div className="question-hub-heading">
 
-          <div
-            className="qh-heading-icon"
-            aria-hidden="true"
-          >
-            ♜
-          </div>
+    <div
+      className="qh-heading-icon"
+      aria-hidden="true"
+    >
+      ♜
+    </div>
 
-          <div>
+    <div>
+      <h1>
+        QUESTION HUB
+      </h1>
 
-            <h1>
-              QUESTION HUB
-            </h1>
+      <p>
+        Choose a question to start coding
+      </p>
+    </div>
 
-            <p>
-              Choose a question to start coding
-            </p>
-
-          </div>
-
-        </div>
-
-
+  </div>
+          
         {/* =========================
             QUESTION CARDS
         ========================== */}
